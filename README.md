@@ -6,6 +6,11 @@
 
 <br/>
 
+## 마일스톤
+![milestone_img.png](docs/milestone_img.png)
+
+<br/>
+
 ## 요구사항 분석
 #### 최소한의 구현을 위한 기본가정
 > **콘서트 예약**이라는 건 보통 인터파크 티켓, Yes24 티켓, 멜론티켓 등 티켓팅 사이트에서 주로 경험하게 됩니다.  
@@ -26,6 +31,3 @@
 3. [시퀀스다이어그램](docs/sequence.md)
 
 <br/>
-
-## 마일스톤
-![milestone_img.png](docs/milestone_img.png)
