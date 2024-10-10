@@ -31,3 +31,57 @@
 3. [시퀀스다이어그램](docs/sequence.md)
 
 <br/>
+
+## [ERD 설계](docs/erd.md) (링크)
+[![미리보기](docs/erd_img.png)](docs/erd.md)
+
+<br/>
+
+## 기술스택
+> 언어: Java 17  
+> 프레임워크: Spring Boot   
+> ORM: JPA (Hibernate)  
+> 데이터베이스: MySQL  
+> 빌드: Gradle
+
+<br/>
+
+## 기본 패키지 구조
+```
+/api
+    /concert
+        /~Request.java
+        /~Response.java
+        /ConcertController.java
+    /reservation
+    /user
+    /waiting
+/domain
+    /concert
+        /ConcertEntity.java -- JPA Entity
+        /ConcertService.java
+        /ConcertRepository.java -- interface
+        /ConcertException.java
+    /reservation
+    /user
+    /waiting
+/infra
+    /concert
+        /ConcertJpaRepository.java
+        /ConcertRepositoryImpl.java
+    /reservation
+    /user
+    /waiting
+/support
+    /.. common things
+```
+
+#### 1. Repository interface와 Impl의 레이어 분리
+다양한 아키텍처가 있을 수 있겠지만, 항해플러스에서는 기본적으로 `관심사분리`, `DIP`등을 중점으로 생각하시는 것 같습니다. 저도 이에 맞춰서 경험해보고 나름대로의 아키텍처에 대한 의견을 길러보고 싶습니다.  
+#### 2. JPA Entity는 domain 레이어에
+2주차에 JPA Entity까지 infra 패키지로 나누어서 작업을 진행해 보았습니다. 경험해 본 결과 변환로직을 계속 작업해주어야 하는게 번거롭게 느껴졌고, 더티체킹?을 할 수 없어 데이터 업데이트가 복잡해졌습니다. 따라서 이번에는 JPA Entity를 domain 레이어에 두고 작업을 해보고자 합니다.
+
+<br/>
+
+## [API 명세](https://n-uyh.github.io/concert/dist/index.html) (링크)
+**배포된게 아니라서 응답은 받지 못합니다.**
