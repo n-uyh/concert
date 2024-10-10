@@ -163,3 +163,21 @@ flowchart TD
     CheckPoint--false-->NoPoint
     CheckPoint--true-->NewPointHistory-->CalculateUserPoint-->ChangeReservationStatus-->NewPaymentHistory-->ExpireToken-->Return
 ```
+
+#### 좌석 임시배정만료 스케줄러
+```mermaid
+---
+title: 좌석 임시배정만료 스케줄러
+---
+flowchart TD
+    Start([Start])
+    FindNotPayedReservation[결제대기 상태인 예약건 리스트 조회]
+    
+    CheckExpired{현재시간이 만료예정시간 이후인가?}
+    ExpireReservation[예약취소 상태로 업데이트]
+    End([End])
+    
+    Start-->FindNotPayedReservation-->CheckExpired
+    CheckExpired--true-->ExpireReservation-->End
+    CheckExpired--false-->End
+```

@@ -244,3 +244,18 @@ sequenceDiagram
         api -->> user: return 예약정보
     end
 ```
+#### 좌석 임시배정만료 스케줄러
+```mermaid
+sequenceDiagram
+    participant sch as 스케줄러
+    participant reservation as 예약(Reservation)
+    participant db as DB
+    
+    loop 30초에 한번씩
+        sch ->> reservation: 임시배정만료체크
+        reservation ->> db: find 결제대기 예약리스트
+        db -->> reservation: return 결제대기 예약리스트
+        reservation ->> reservation: 만료인지 확인
+        reservation ->> db: update 만료상태
+    end
+```
