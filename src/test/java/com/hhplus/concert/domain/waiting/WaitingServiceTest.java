@@ -4,6 +4,7 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.when;
 
 import com.hhplus.concert.api.waiting.WaitingResponse;
+import com.hhplus.concert.api.waiting.WaitingResponse.CreatedResult;
 import com.hhplus.concert.domain.user.UserRepository;
 import com.hhplus.concert.domain.waiting.WaitingException.WaitingError;
 import java.time.LocalDateTime;
@@ -46,7 +47,7 @@ class WaitingServiceTest {
         when(userRepository.existsByUserId(userId)).thenReturn(true);
         when(waitingRepository.findNotExpiredByUserId(userId)).thenReturn(null);
 
-        WaitingResponse response = waitingService.createOrGetToken(userId);
+        CreatedResult response = waitingService.createOrGetToken(userId);
         assertEquals(userId, response.userId());
     }
 
@@ -61,7 +62,7 @@ class WaitingServiceTest {
             new WaitingEntity(1, userId, token, WaitingStatus.WAITING, createdAt, createdAt)
         );
 
-        WaitingResponse response = waitingService.createOrGetToken(userId);
+        CreatedResult response = waitingService.createOrGetToken(userId);
         assertEquals(userId, response.userId());
         assertEquals(token, response.token());
         assertEquals(createdAt, response.createdAt());

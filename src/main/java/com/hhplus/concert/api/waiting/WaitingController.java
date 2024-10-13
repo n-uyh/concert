@@ -1,5 +1,6 @@
 package com.hhplus.concert.api.waiting;
 
+import com.hhplus.concert.api.waiting.WaitingResponse.CreatedResult;
 import com.hhplus.concert.domain.waiting.WaitingService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -16,10 +17,10 @@ public class WaitingController implements IWaitingController {
     private final WaitingService waitingService;
 
     @PostMapping
-    public ResponseEntity<WaitingResponse> requestToken(
+    public ResponseEntity<CreatedResult> requestToken(
         @RequestHeader("Hh-User-Id") long userId
     ) {
-        WaitingResponse response = waitingService.createOrGetToken(userId);
+        CreatedResult response = waitingService.createOrGetToken(userId);
         return ResponseEntity.ok(response);
     }
 
