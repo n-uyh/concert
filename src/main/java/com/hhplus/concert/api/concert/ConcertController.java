@@ -19,7 +19,7 @@ public class ConcertController implements IConcertController {
 
     @GetMapping
     public ResponseEntity<List<ConcertResponse>> availableConcerts(
-        @RequestHeader("X-Waiting-Header") String token,
+        @RequestHeader("Hh-Waiting-Token") String token,
         @ModelAttribute AvailableConcertRequest request
     ) {
         ConcertResponse mock = new ConcertResponse(1, "공연", LocalDate.now(), LocalTime.now());
@@ -28,7 +28,7 @@ public class ConcertController implements IConcertController {
 
     @GetMapping("/{concertId}")
     public ResponseEntity<List<SeatResponse>> availableSeats(
-        @RequestHeader("X-Waiting-Header") String token,
+        @RequestHeader("Hh-Waiting-Token") String token,
         @PathVariable long concertId
     ) {
         SeatResponse mock1 = new SeatResponse(1, 1, 100_000, false);

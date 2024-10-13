@@ -20,7 +20,7 @@ public class UserController implements IUserController {
 
     @PatchMapping("charge")
     public ResponseEntity<UserPointResponse> chargeUserPoint(
-        @RequestHeader("X-Waiting-Header") String token,
+        @RequestHeader("Hh-Waiting-Token") String token,
         @RequestBody PointChargeRequest request
     ) {
         UserPointResponse mock = new UserPointResponse(1, 200_000);
@@ -29,7 +29,7 @@ public class UserController implements IUserController {
 
     @GetMapping("point")
     public ResponseEntity<UserPointResponse> point(
-        @RequestHeader("X-Waiting-Header") String token
+        @RequestHeader("Hh-Waiting-Token") String token
     ) {
         UserPointResponse mock = new UserPointResponse(1, 200_000);
         return ResponseEntity.ok(mock);
