@@ -12,17 +12,13 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-@Tag(name = "Waiting", description = "대기열 API")
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/waiting")
-public class WaitingController {
+public class WaitingController implements IWaitingController {
 
-    @Operation(summary = "사용자 토큰 발급/조회 기능", description = "사용자의 대기열토큰을 발급 및 조회합니다.")
-    @ApiResponse(responseCode = "200", description = "토큰반환")
     @PostMapping
     public ResponseEntity<WaitingResponse> requestToken(
-        @Schema(description = "사용자id")
         long userId
     ) {
         WaitingResponse mock =

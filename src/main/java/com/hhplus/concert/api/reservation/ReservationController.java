@@ -14,17 +14,13 @@ import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-@Tag(name = "Reservation", description = "좌석예약 API")
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/reservation")
-public class ReservationController {
+public class ReservationController implements IReservationController {
 
-    @Operation(summary = "좌석 예약 요청", description = "한 좌석에 예약을 요청합니다.")
-    @ApiResponse(responseCode = "200", description = "예약성공")
     @PostMapping
     public ResponseEntity<ReservationResponse> createReservation(
-        @Schema(description = "토큰")
         @RequestHeader("X-Waiting-Header") String token,
         @RequestBody ReservationRequest request
     ) {
@@ -32,11 +28,8 @@ public class ReservationController {
         return ResponseEntity.ok(mock);
     }
 
-    @Operation(summary = "예약내역 결제 요청", description = "예약내역에 관한 결제를 요청합니다.")
-    @ApiResponse(responseCode = "200", description = "결제성공")
     @PatchMapping
     public ResponseEntity<ReservationResponse> payToReservation(
-        @Schema(description = "토큰")
         @RequestHeader("X-Waiting-Header") String token,
         @RequestBody ReservationPayReqeust reqeust
     ) {
