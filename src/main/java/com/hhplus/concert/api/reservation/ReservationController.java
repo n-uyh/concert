@@ -21,7 +21,7 @@ public class ReservationController implements IReservationController {
 
     @PostMapping
     public ResponseEntity<ReservationResponse> createReservation(
-        @RequestHeader("X-Waiting-Header") String token,
+        @RequestHeader("Hh-Waiting-Token") String token,
         @RequestBody ReservationRequest request
     ) {
         ReservationResponse mock = new ReservationResponse(1,1,100_000,"결제대기", LocalDateTime.now());
@@ -30,7 +30,7 @@ public class ReservationController implements IReservationController {
 
     @PatchMapping
     public ResponseEntity<ReservationResponse> payToReservation(
-        @RequestHeader("X-Waiting-Header") String token,
+        @RequestHeader("Hh-Waiting-Token") String token,
         @RequestBody ReservationPayReqeust reqeust
     ) {
         ReservationResponse mock = new ReservationResponse(1,1,100_000,"결제완료", LocalDateTime.now());
