@@ -1,9 +1,11 @@
 package com.hhplus.concert.api.waiting;
 
+import com.hhplus.concert.api.waiting.WaitingResponse.CheckedResult;
 import com.hhplus.concert.api.waiting.WaitingResponse.CreatedResult;
 import com.hhplus.concert.domain.waiting.WaitingService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -21,6 +23,14 @@ public class WaitingController implements IWaitingController {
         @RequestHeader("Hh-User-Id") long userId
     ) {
         CreatedResult response = waitingService.createOrGetToken(userId);
+        return ResponseEntity.ok(response);
+    }
+
+    @PatchMapping
+    public ResponseEntity<CheckedResult> checkTokenStatus(
+        @RequestHeader("Hh-Waiting-Token") String token
+    ) {
+        CheckedResult response = waitingService.checkTokenStatus(token);
         return ResponseEntity.ok(response);
     }
 

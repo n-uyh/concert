@@ -15,4 +15,20 @@ public class WaitingResponse {
         }
     }
 
+    public record CheckedResult(
+        long userId,
+        String token,
+        String status,
+        long waitingNo,
+        LocalDateTime updatedAt
+    ) {
+
+        public static CheckedResult from(WaitingEntity entity, long waitingNo) {
+            return new CheckedResult(entity.getUserId(), entity.getToken(), entity.status(), waitingNo, entity.getUpdatedAt());
+        }
+
+        public static CheckedResult activeFrom(WaitingEntity entity) {
+            return CheckedResult.from(entity, 0);
+        }
+    }
 }

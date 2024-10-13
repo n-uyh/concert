@@ -16,7 +16,10 @@ public class WaitingException extends BaseException {
     @AllArgsConstructor
     public enum WaitingError implements BaseErrorCode {
 
-        USER_NOT_FOUND(403, "US001", "알 수 없는 사용자입니다.");
+        USER_NOT_FOUND(404, "US001", "알 수 없는 사용자입니다."),
+        TOKEN_NOT_FOUND(404, "TK001", "토큰정보를 찾을 수 없습니다."),
+        EXPIRED_TOKEN(401, "TK002", "만료된 토큰입니다.")
+        ;
 
         private final int status;
         private final String code;

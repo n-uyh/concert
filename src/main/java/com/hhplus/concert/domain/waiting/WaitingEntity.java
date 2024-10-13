@@ -1,5 +1,6 @@
 package com.hhplus.concert.domain.waiting;
 
+import com.hhplus.concert.domain.waiting.WaitingException.WaitingError;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
@@ -35,6 +36,8 @@ public class WaitingEntity {
     LocalDateTime createdAt;
     LocalDateTime updatedAt;
 
+    public static final int MAX_ACTIVE = 10;
+
     public WaitingEntity(long userId) {
         this.userId = userId;
         this.token = UUID.randomUUID().toString();
@@ -45,6 +48,26 @@ public class WaitingEntity {
     }
 
     public String status() {
-        return status.getOption();
+        return status.name();
+    }
+
+    public void checkExpired() {
+        if (status == WaitingStatus.EXPIRED) {
+            throw new WaitingException(WaitingError.EXPIRED_TOKEN);
+        }
+    }
+
+    public boolean isActive() {
+        return status == WaitingStatus.ACTIVE;
+    }
+
+    public void activate() {
+        this.status = WaitingStatus.ACTIVE;
+        this.updatedAt = LocalDateTime.now();
+    }
+
+    public static boolean canActivate(int nowActive, int waitingNo) {
+        int slot = MAX_ACTIVE - nowActive;
+        return slot > 0 && waitingNo <= slot;
     }
 }
