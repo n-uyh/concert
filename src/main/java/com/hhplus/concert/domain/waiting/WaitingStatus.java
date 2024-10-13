@@ -7,7 +7,7 @@ import lombok.Getter;
 @Getter
 public enum WaitingStatus {
 
-    WAITING("대기"),
+    WAIT("대기"),
     ACTIVE("활성"),
     EXPIRED("만료")
     ;

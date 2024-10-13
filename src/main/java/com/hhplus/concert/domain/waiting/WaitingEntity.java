@@ -9,13 +9,14 @@ import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 import java.time.LocalDateTime;
 import java.util.UUID;
+import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Data
 @Entity
-@NoArgsConstructor
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
 @Table(name = "waiting")
 public class WaitingEntity {
@@ -33,10 +34,10 @@ public class WaitingEntity {
     LocalDateTime updatedAt;
 
     public static WaitingEntity create(LocalDateTime createdAt) {
-        return new WaitingEntity(0,UUID.randomUUID().toString(),WaitingStatus.WAITING,createdAt,createdAt);
+        return new WaitingEntity(0,UUID.randomUUID().toString(),WaitingStatus.WAIT,createdAt,createdAt);
     }
 
     public String status() {
-        return status.getOption();
+        return status.name();
     }
 }
