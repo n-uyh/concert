@@ -11,9 +11,9 @@ public interface IUserController {
 
     @Operation(summary = "사용자 포인트 잔액 충전", description = "사용자의 포인트 잔액을 충전합니다.")
     @ApiResponse(responseCode = "200", description = "충전성공")
-    ResponseEntity<UserPointResponse> chargeUserPoint(
+    ResponseEntity<UserResponse.PointResult> chargeUserPoint(
         @Schema(description = "토큰") String token,
-        PointChargeRequest request
+        UserRequest.ChargePoint request
     );
 
     @Operation(summary = "사용자 포인트 잔액 조회", description = "사용자의 포인트 잔액을 조회합니다.")

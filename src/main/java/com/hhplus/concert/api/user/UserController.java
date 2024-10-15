@@ -1,9 +1,7 @@
 package com.hhplus.concert.api.user;
 
-import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.media.Schema;
-import io.swagger.v3.oas.annotations.responses.ApiResponse;
-import io.swagger.v3.oas.annotations.tags.Tag;
+import com.hhplus.concert.api.user.UserResponse.PointResult;
+import com.hhplus.concert.application.UserFacade;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -18,13 +16,15 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/user/")
 public class UserController implements IUserController {
 
+    private final UserFacade userFacade;
+
     @PatchMapping("charge")
-    public ResponseEntity<UserPointResponse> chargeUserPoint(
+    public ResponseEntity<UserResponse.PointResult> chargeUserPoint(
         @RequestHeader("Hh-Waiting-Token") String token,
-        @RequestBody PointChargeRequest request
+        @RequestBody UserRequest.ChargePoint request
     ) {
-        UserPointResponse mock = new UserPointResponse(1, 200_000);
-        return ResponseEntity.ok(mock);
+        PointResult result = PointResult.from(userFacade.charge(request.toCommand(token)));
+        return ResponseEntity.ok(result);
     }
 
     @GetMapping("point")
