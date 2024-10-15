@@ -1,6 +1,8 @@
 package com.hhplus.concert.domain.waiting;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import com.hhplus.concert.domain.waiting.WaitingException.WaitingError;
@@ -102,5 +104,48 @@ class WaitingServiceTest {
         assertEquals(token, result.token());
         assertEquals(status.name(), result.status());
         assertEquals(1, result.waitingNo());
+    }
+
+    @Test
+    @DisplayName("토큰이 ACTIVE 상태인지 확인할때 발급된 토큰이 없는 경우 TOKEN_NOT_FOUND 에러가 발생한다")
+    void checkTokenIsActiveButNotFound() {
+        String token = "someToken";
+        when(waitingRepository.findOneByToken(token)).thenReturn(Optional.empty());
+        WaitingException exception = assertThrows(WaitingException.class,
+            () -> waitingService.checkTokenIsActive(token));
+
+        assertEquals(WaitingError.TOKEN_NOT_FOUND, exception.getErrorCode());
+    }
+
+    @Test
+    @DisplayName("토큰이 ACTIVE 상태인지 확인할때 발급된 토큰이 ACTIVE상태가 아닌경우 NOT_ACTIVE_TOKEN 에러가 발생한다")
+    void checkTokenIsActiveButNotActive() {
+        String token = "someToken";
+        WaitingStatus status = WaitingStatus.WAIT;
+        LocalDateTime someDateTime = LocalDateTime.of(2024,10,10,20,0,0);
+        WaitingEntity waiting = new WaitingEntity(1,  token, status, someDateTime,
+            someDateTime);
+
+        when(waitingRepository.findOneByToken(token)).thenReturn(Optional.of(waiting));
+        WaitingException exception = assertThrows(WaitingException.class,
+            () -> waitingService.checkTokenIsActive(token));
+
+        assertEquals(WaitingError.NOT_ACTIVE_TOKEN, exception.getErrorCode());
+    }
+
+    @Test
+    @DisplayName("토큰이 ACTIVE 상태인지 확인할때 발급된 토큰이 ACTIVE상태이면 아무 에러도 발생하지 않는다")
+    void checkTokenIsActiveAndActive() {
+        String token = "someToken";
+        WaitingStatus status = WaitingStatus.ACTIVE;
+        LocalDateTime someDateTime = LocalDateTime.of(2024,10,10,20,0,0);
+        WaitingEntity waiting = new WaitingEntity(1,  token, status, someDateTime,
+            someDateTime);
+
+        when(waitingRepository.findOneByToken(token)).thenReturn(Optional.of(waiting));
+
+        waitingService.checkTokenIsActive(token);
+
+        verify(waitingRepository, times(1)).findOneByToken(token);
     }
 }

@@ -39,4 +39,11 @@ public class WaitingService {
         return new TokenInfo(waiting, waitingNo);
     }
 
+    @Transactional(readOnly = true)
+    public void checkTokenIsActive(String token) {
+        WaitingEntity waiting = waitingRepository.findOneByToken(token).orElseThrow(() -> new WaitingException(WaitingError.TOKEN_NOT_FOUND));
+        if (!waiting.isActive()) {
+            throw new WaitingException(WaitingError.NOT_ACTIVE_TOKEN);
+        }
+    }
 }
