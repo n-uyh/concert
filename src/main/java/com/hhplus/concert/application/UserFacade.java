@@ -17,4 +17,9 @@ public class UserFacade {
         return userService.chargePoint(command.userId(), command.amount());
     }
 
+    public UserInfo.Point getPoint(UserCommand.GetPoint command) {
+        waitingService.checkTokenIsActive(command.token());
+        return userService.getPoint(command.userId());
+    }
+
 }

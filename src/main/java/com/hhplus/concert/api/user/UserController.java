@@ -1,7 +1,5 @@
 package com.hhplus.concert.api.user;
 
-import com.hhplus.concert.api.user.UserResponse.PointResult;
-import com.hhplus.concert.application.UserFacade;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -27,12 +25,13 @@ public class UserController implements IUserController {
         return ResponseEntity.ok(result);
     }
 
-    @GetMapping("point")
-    public ResponseEntity<UserPointResponse> point(
-        @RequestHeader("Hh-Waiting-Token") String token
+    @GetMapping("/{userId}/point")
+    public ResponseEntity<UserResponse.PointResult> point(
+        @RequestHeader("Hh-Waiting-Token") String token,
+        @PathVariable long userId
     ) {
-        UserPointResponse mock = new UserPointResponse(1, 200_000);
-        return ResponseEntity.ok(mock);
+        PointResult result = PointResult.from(userFacade.getPoint(new GetPoint(token, userId)));
+        return ResponseEntity.ok(result);
     }
 
 }

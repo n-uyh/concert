@@ -10,4 +10,11 @@ public class UserCommand {
 
     }
 
+    public record GetPoint(
+        String token,
+        long userId
+    ) {
+
+    }
+
 }

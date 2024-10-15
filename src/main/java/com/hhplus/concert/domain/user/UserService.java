@@ -27,6 +27,10 @@ public class UserService {
         return UserInfo.Point.from(user);
     }
 
-
+    public UserInfo.Point getPoint(long userId) {
+        UserEntity user = userRepository.findOneUser(userId).orElseThrow(
+            () -> new UserException(UserError.USER_NOT_FOUND));
+        return UserInfo.Point.from(user);
+    }
 
 }

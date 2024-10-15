@@ -18,8 +18,9 @@ public interface IUserController {
 
     @Operation(summary = "사용자 포인트 잔액 조회", description = "사용자의 포인트 잔액을 조회합니다.")
     @ApiResponse(responseCode = "200", description = "조회성공")
-    ResponseEntity<UserPointResponse> point(
-        @Schema(description = "토큰") String token
+    ResponseEntity<UserResponse.PointResult> point(
+        @Schema(description = "토큰") String token,
+        long userId
     );
 
 }
