@@ -4,6 +4,7 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.when;
 
 import com.hhplus.concert.application.ConcertInfo.Common;
+import com.hhplus.concert.application.ConcertInfo.Seats;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.List;
@@ -45,6 +46,24 @@ class ConcertServiceTest {
         assertEquals(1, results.size());
         assertTrue(concertDate.isAfter(from));
         assertTrue(concertDate.isBefore(end));
+    }
+
+    @Test
+    @DisplayName("좌석 조회 성공 테스트")
+    void findAllSeatsByConcertId() {
+        long concertId = 1;
+        when(concertRepository.findAllSeatsByConcertId(concertId)).thenReturn(
+            List.of(
+                new ConcertSeatEntity(1, concertId, 1, 100_000, false),
+                new ConcertSeatEntity(1, concertId, 2, 100_000, false),
+                new ConcertSeatEntity(1, concertId, 3, 100_000, false),
+                new ConcertSeatEntity(1, concertId, 4, 150_000, true)
+            )
+        );
+
+        List<Seats> seats = concertService.findAllSeatsByConcertId(concertId);
+
+        assertEquals(4, seats.size());
     }
 
 
