@@ -26,4 +26,23 @@ public class ConcertResponse {
         }
     }
 
+    public record SeatList(
+        List<SeatResult> seats
+    ) {
+        public static SeatList from(List<ConcertInfo.Seats> infos) {
+            return new SeatList(infos.stream().map(SeatResult::from).toList());
+        }
+
+    }
+
+    public record SeatResult(
+        int seatNo,
+        long price,
+        boolean occupied
+    ) {
+
+        public static SeatResult from(ConcertInfo.Seats info) {
+            return new SeatResult(info.seatNo(), info.price(), info.occupied());
+        }
+    }
 }

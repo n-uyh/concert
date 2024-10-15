@@ -7,4 +7,6 @@ public interface ConcertRepository {
 
     List<ConcertEntity> findAllByConcertDateBetween(LocalDate from, LocalDate end);
 
+    List<ConcertSeatEntity> findAllSeatsByConcertId(long concertId);
+
 }
