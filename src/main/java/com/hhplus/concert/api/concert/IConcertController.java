@@ -1,5 +1,7 @@
 package com.hhplus.concert.api.concert;
 
+import com.hhplus.concert.api.concert.ConcertRequest.Available;
+import com.hhplus.concert.api.concert.ConcertResponse.ConcertList;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -13,9 +15,9 @@ public interface IConcertController {
 
     @Operation(summary = "예약가능 날짜 조회", description = "예약가능한 공연날짜 리스트를 조회합니다.")
     @ApiResponse(responseCode = "200", description = "조회성공")
-    ResponseEntity<List<ConcertResponse>> availableConcerts(
+    ResponseEntity<ConcertList> availableConcerts(
         @Schema(description = "토큰") String token,
-        @ParameterObject AvailableConcertRequest request
+        @ParameterObject Available request
     );
 
     @Operation(summary = "예약가능 좌석 조회", description = "공연정보로 공연좌석 리스트를 조회합니다.")

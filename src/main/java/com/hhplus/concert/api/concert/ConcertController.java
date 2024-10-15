@@ -1,7 +1,8 @@
 package com.hhplus.concert.api.concert;
 
-import java.time.LocalDate;
-import java.time.LocalTime;
+import com.hhplus.concert.api.concert.ConcertRequest.Available;
+import com.hhplus.concert.api.concert.ConcertResponse.ConcertList;
+import com.hhplus.concert.application.ConcertFacade;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -14,16 +15,18 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/concert")
+@RequestMapping("/concerts")
 public class ConcertController implements IConcertController {
 
+    private final ConcertFacade concertFacade;
+
     @GetMapping
-    public ResponseEntity<List<ConcertResponse>> availableConcerts(
+    public ResponseEntity<ConcertList> availableConcerts(
         @RequestHeader("Hh-Waiting-Token") String token,
-        @ModelAttribute AvailableConcertRequest request
+        @ModelAttribute Available request
     ) {
-        ConcertResponse mock = new ConcertResponse(1, "공연", LocalDate.now(), LocalTime.now());
-        return ResponseEntity.ok(List.of(mock));
+        ConcertList concerts = ConcertList.from(concertFacade.findAllAvailable(request.toCommand(token)));
+        return ResponseEntity.ok(concerts);
     }
 
     @GetMapping("/{concertId}")
