@@ -1,14 +1,11 @@
 package com.hhplus.concert.api.concert;
 
-import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.media.Schema;
-import io.swagger.v3.oas.annotations.responses.ApiResponse;
-import io.swagger.v3.oas.annotations.tags.Tag;
-import java.time.LocalDate;
-import java.time.LocalTime;
+import com.hhplus.concert.api.concert.ConcertRequest.Available;
+import com.hhplus.concert.api.concert.ConcertResponse.ConcertList;
+import com.hhplus.concert.api.concert.ConcertResponse.SeatList;
+import com.hhplus.concert.application.ConcertFacade;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
-import org.springdoc.core.annotations.ParameterObject;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -17,38 +14,29 @@ import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-@Tag(name = "Concert", description = "콘서트 API")
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/concert")
-public class ConcertController {
+@RequestMapping("/concerts")
+public class ConcertController implements IConcertController {
 
-    @Operation(summary = "예약가능 날짜 조회", description = "예약가능한 공연날짜 리스트를 조회합니다.")
-    @ApiResponse(responseCode = "200", description = "조회성공")
+    private final ConcertFacade concertFacade;
+
     @GetMapping
-    public ResponseEntity<List<ConcertResponse>> availableConcerts(
-        @Schema(description = "토큰")
-        @RequestHeader("X-Waiting-Header") String token,
-        @ParameterObject
-        @ModelAttribute AvailableConcertRequest request
+    public ResponseEntity<ConcertList> availableConcerts(
+        @RequestHeader("Hh-Waiting-Token") String token,
+        @ModelAttribute Available request
     ) {
-        ConcertResponse mock = new ConcertResponse(1, "공연", LocalDate.now(), LocalTime.now());
-        return ResponseEntity.ok(List.of(mock));
+        ConcertList concerts = ConcertList.from(concertFacade.findAllAvailable(request.toCommand(token)));
+        return ResponseEntity.ok(concerts);
     }
 
-
-    @Operation(summary = "예약가능 좌석 조회", description = "공연정보로 공연좌석 리스트를 조회합니다.")
-    @ApiResponse(responseCode = "200", description = "조회성공")
     @GetMapping("/{concertId}")
-    public ResponseEntity<List<SeatResponse>> availableSeats(
-        @Schema(description = "토큰")
-        @RequestHeader("X-Waiting-Header") String token,
-        @Schema(description = "공연id")
+    public ResponseEntity<SeatList> availableSeats(
+        @RequestHeader("Hh-Waiting-Token") String token,
         @PathVariable long concertId
     ) {
-        SeatResponse mock1 = new SeatResponse(1, 1, 100_000, false);
-        SeatResponse mock2 = new SeatResponse(2, 2, 100_000, true);
-        return ResponseEntity.ok(List.of(mock1, mock2));
+        SeatList seats = SeatList.from(concertFacade.findAllSeatsByConcertId(token, concertId));
+        return ResponseEntity.ok(seats);
     }
 
 }

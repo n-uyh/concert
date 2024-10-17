@@ -83,5 +83,6 @@
 
 <br/>
 
-## [API 명세](https://n-uyh.github.io/concert/dist/index.html) (링크)
+## [API 명세](https://n-uyh.github.io/concert/dist/index.html) (링크) - 2024.10.18 업데이트
 **배포된게 아니라서 응답은 받지 못합니다.**
+![swagger-image.png](docs/swagger-img.png)
