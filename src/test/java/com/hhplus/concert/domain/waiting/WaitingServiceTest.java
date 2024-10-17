@@ -1,6 +1,7 @@
 package com.hhplus.concert.domain.waiting;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -147,5 +148,19 @@ class WaitingServiceTest {
         waitingService.checkTokenIsActive(token);
 
         verify(waitingRepository, times(1)).findOneByToken(token);
+    }
+
+    @Test
+    @DisplayName("토큰 만료 성공테스트")
+    void expireTokenSuccess() {
+        String token = "someToken";
+        LocalDateTime createdAt = LocalDateTime.of(2024, 10, 10, 12, 0, 0);
+        WaitingEntity entity = new WaitingEntity(0, token, WaitingStatus.ACTIVE, createdAt,
+            createdAt);
+        when(waitingRepository.findOneByToken(token)).thenReturn(Optional.of(entity));
+
+        waitingService.expireToken(token);
+
+        assertEquals(WaitingStatus.EXPIRED, entity.getStatus());
     }
 }

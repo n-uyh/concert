@@ -25,7 +25,7 @@ public class ReservationService {
     @Transactional
     public ReservedInfo findReservationWithStatusUpdate(long reservationId) {
         ReservationEntity reservation = reservationRepository.findOneById(reservationId);
-        reservation.updateExpired(); // 만료 시간 지났으면 업데이트
+        reservation.updateExpired(LocalDateTime.now()); // 만료 시간 지났으면 업데이트
         return ReservedInfo.from(reservation);
     }
 }

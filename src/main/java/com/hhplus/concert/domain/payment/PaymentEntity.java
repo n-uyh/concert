@@ -31,7 +31,7 @@ public class PaymentEntity {
     private LocalDateTime createdAt;
 
     public static PaymentEntity create(long userId, long reservationId, long price, LocalDateTime createdAt) {
-        return new PaymentEntity(0, userId, reservationId, price, PaymentStatus.WAIT, createdAt);
+        return new PaymentEntity(0, userId, reservationId, price, PaymentStatus.COMPLETED, createdAt);
     }
 
 }

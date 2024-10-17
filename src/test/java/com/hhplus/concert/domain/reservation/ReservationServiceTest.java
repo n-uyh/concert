@@ -1,14 +1,15 @@
 package com.hhplus.concert.domain.reservation;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 import com.hhplus.concert.application.ConcertInfo.SeatInfo;
 import com.hhplus.concert.application.ReservationInfo.ReservedInfo;
 import java.time.Duration;
+import java.time.LocalDateTime;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -41,5 +42,20 @@ class ReservationServiceTest {
         assertEquals(seatId, info.seatId());
         assertEquals(ReservationStatus.RESERVED.name(), info.status());
         assertEquals(ReservationEntity.EXPIRES_AFTER_SECONDS, Duration.between(info.reservedAt(), info.expiresAt()).getSeconds());
+    }
+
+    @Test
+    @DisplayName("예약건을 찾고 만료정보 업데이트 성공케이스")
+    void findReservationWithStatusUpdate() {
+        long reservationId = 1;
+        LocalDateTime createdAt = LocalDateTime.of(2024, 10, 10, 15, 0, 0);
+        when(reservationRepository.findOneById(reservationId)).thenReturn(
+            new ReservationEntity(reservationId, 1, 1, 100_000, ReservationStatus.RESERVED, createdAt, createdAt.plusMinutes(5))
+        );
+
+        ReservedInfo info = reservationService.findReservationWithStatusUpdate(
+            reservationId);
+
+        assertEquals(ReservationStatus.CANCELED.name(),info.status());
     }
 }
