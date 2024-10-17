@@ -24,4 +24,9 @@ public class ConcertRepositoryImpl implements ConcertRepository {
     public List<ConcertSeatEntity> findAllSeatsByConcertId(long concertId) {
         return concertSeatsJpaRepository.findAllByConcertId(concertId);
     }
+
+    @Override
+    public ConcertSeatEntity findOneBySeatIdWithLock(long seatId) {
+        return concertSeatsJpaRepository.findOneByIdWithLock(seatId);
+    }
 }

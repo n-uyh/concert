@@ -1,5 +1,6 @@
 package com.hhplus.concert.domain.concert;
 
+import com.hhplus.concert.domain.concert.ConcertException.ConcertError;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -26,4 +27,14 @@ public class ConcertSeatEntity {
     private int seatNo;
     private long price;
     private boolean occupied;
+
+    public void occupy() {
+        this.occupied = true;
+    }
+
+    public void checkOccupied() {
+        if (occupied) {
+            throw new ConcertException(ConcertError.SEAT_ALREADY_OCCUPIED);
+        }
+    }
 }

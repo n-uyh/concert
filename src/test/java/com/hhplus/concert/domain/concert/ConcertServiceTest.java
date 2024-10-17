@@ -1,10 +1,13 @@
 package com.hhplus.concert.domain.concert;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.when;
 
 import com.hhplus.concert.application.ConcertInfo.Common;
-import com.hhplus.concert.application.ConcertInfo.Seats;
+import com.hhplus.concert.application.ConcertInfo.SeatInfo;
+import com.hhplus.concert.domain.concert.ConcertException.ConcertError;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.List;
@@ -61,9 +64,39 @@ class ConcertServiceTest {
             )
         );
 
-        List<Seats> seats = concertService.findAllSeatsByConcertId(concertId);
+        List<SeatInfo> seats = concertService.findAllSeatsByConcertId(concertId);
 
         assertEquals(4, seats.size());
+    }
+
+    @Test
+    @DisplayName("좌석을 조회했으나 이미 선택된 좌석입니다.")
+    void findSeatButAlreadyOccupied() {
+        long seatId = 1;
+        boolean occupied = true;
+        when(concertRepository.findOneBySeatIdWithLock(seatId)).thenReturn(
+            new ConcertSeatEntity(seatId, 1, 1,100_000, occupied)
+        );
+
+        ConcertException exception = assertThrows(ConcertException.class,
+            () -> concertService.findAndOccupySeat(seatId));
+
+        assertEquals(ConcertError.SEAT_ALREADY_OCCUPIED, exception.getErrorCode());
+    }
+
+    @Test
+    @DisplayName("좌석을 찾고 점유성공한다.")
+    void findAndOccupySeatSuccess() {
+        long seatId = 1;
+        boolean occupied = false;
+        when(concertRepository.findOneBySeatIdWithLock(seatId)).thenReturn(
+            new ConcertSeatEntity(seatId, 1, 1,100_000, occupied)
+        );
+
+        SeatInfo seat = concertService.findAndOccupySeat(seatId);
+
+        assertEquals(seatId, seat.seatId());
+        assertTrue(seat.occupied());
     }
 
 

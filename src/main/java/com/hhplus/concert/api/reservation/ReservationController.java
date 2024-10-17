@@ -1,10 +1,7 @@
 package com.hhplus.concert.api.reservation;
 
-import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.media.Schema;
-import io.swagger.v3.oas.annotations.responses.ApiResponse;
-import io.swagger.v3.oas.annotations.tags.Tag;
-import java.time.LocalDateTime;
+import com.hhplus.concert.api.reservation.ReservationResponse.Reserved;
+import com.hhplus.concert.application.ReservationFacade;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PatchMapping;
@@ -19,13 +16,15 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/reservation")
 public class ReservationController implements IReservationController {
 
+    private final ReservationFacade reservationFacade;
+
     @PostMapping
-    public ResponseEntity<ReservationResponse> createReservation(
+    public ResponseEntity<ReservationResponse.Reserved> createReservation(
         @RequestHeader("Hh-Waiting-Token") String token,
-        @RequestBody ReservationRequest request
+        @RequestBody ReservationRequest.Seat request
     ) {
-        ReservationResponse mock = new ReservationResponse(1,1,100_000,"결제대기", LocalDateTime.now());
-        return ResponseEntity.ok(mock);
+        Reserved reservation = Reserved.from(reservationFacade.reserveSeat(request.toCommand(token)));
+        return ResponseEntity.ok(reservation);
     }
 
     @PatchMapping
@@ -33,8 +32,7 @@ public class ReservationController implements IReservationController {
         @RequestHeader("Hh-Waiting-Token") String token,
         @RequestBody ReservationPayReqeust reqeust
     ) {
-        ReservationResponse mock = new ReservationResponse(1,1,100_000,"결제완료", LocalDateTime.now());
-        return ResponseEntity.ok(mock);
+        return null;
     }
 
 }

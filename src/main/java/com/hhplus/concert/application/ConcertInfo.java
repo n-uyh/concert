@@ -19,14 +19,15 @@ public class ConcertInfo {
         }
     }
 
-    public record Seats(
+    public record SeatInfo(
+        long seatId,
         int seatNo,
         long price,
         boolean occupied
     ) {
 
-        public static Seats from(ConcertSeatEntity entity) {
-            return new ConcertInfo.Seats(entity.getSeatNo(), entity.getPrice(), entity.isOccupied());
+        public static SeatInfo from(ConcertSeatEntity entity) {
+            return new SeatInfo(entity.getId(), entity.getSeatNo(), entity.getPrice(), entity.isOccupied());
         }
     }
 }

@@ -11,9 +11,9 @@ public interface IReservationController {
 
     @Operation(summary = "좌석 예약 요청", description = "한 좌석에 예약을 요청합니다.")
     @ApiResponse(responseCode = "200", description = "예약성공")
-    ResponseEntity<ReservationResponse> createReservation(
+    ResponseEntity<ReservationResponse.Reserved> createReservation(
         @Schema(description = "토큰")  String token,
-        ReservationRequest request
+        ReservationRequest.Seat request
     );
 
     @Operation(summary = "예약내역 결제 요청", description = "예약내역에 관한 결제를 요청합니다.")

@@ -1,11 +1,12 @@
 package com.hhplus.concert.domain.concert;
 
 import com.hhplus.concert.application.ConcertInfo;
-import com.hhplus.concert.application.ConcertInfo.Seats;
+import com.hhplus.concert.application.ConcertInfo.SeatInfo;
 import java.time.LocalDate;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
@@ -20,10 +21,18 @@ public class ConcertService {
         return concerts.stream().map(ConcertInfo.Common::from).toList();
     }
 
-    public List<ConcertInfo.Seats> findAllSeatsByConcertId(long concertId) {
+    public List<SeatInfo> findAllSeatsByConcertId(long concertId) {
         List<ConcertSeatEntity> seats = concertRepository.findAllSeatsByConcertId(
             concertId);
 
-        return seats.stream().map(Seats::from).toList();
+        return seats.stream().map(SeatInfo::from).toList();
+    }
+
+    @Transactional
+    public SeatInfo findAndOccupySeat(long seatId) {
+        ConcertSeatEntity seat = concertRepository.findOneBySeatIdWithLock(seatId);
+        seat.checkOccupied();
+        seat.occupy();
+        return SeatInfo.from(seat);
     }
 }

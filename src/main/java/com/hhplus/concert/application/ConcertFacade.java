@@ -1,5 +1,6 @@
 package com.hhplus.concert.application;
 
+import com.hhplus.concert.application.ConcertInfo.SeatInfo;
 import com.hhplus.concert.domain.concert.ConcertService;
 import com.hhplus.concert.domain.waiting.WaitingService;
 import java.util.List;
@@ -18,7 +19,7 @@ public class ConcertFacade {
         return concertService.findAllAvailableConcertBetweenFromAndTo(command.from(), command.end());
     }
 
-    public List<ConcertInfo.Seats> findAllSeatsByConcertId(String token, long concertId) {
+    public List<SeatInfo> findAllSeatsByConcertId(String token, long concertId) {
         waitingService.checkTokenIsActive(token);
         return concertService.findAllSeatsByConcertId(concertId);
     }

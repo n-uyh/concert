@@ -9,4 +9,5 @@ public interface ConcertRepository {
 
     List<ConcertSeatEntity> findAllSeatsByConcertId(long concertId);
 
+    ConcertSeatEntity findOneBySeatIdWithLock(long seatId);
 }
