@@ -51,4 +51,9 @@ public class WaitingEntity {
     public boolean isActive() {
         return status == WaitingStatus.ACTIVE;
     }
+
+    public void expire() {
+        this.status = WaitingStatus.EXPIRED;
+        this.updatedAt = LocalDateTime.now();
+    }
 }

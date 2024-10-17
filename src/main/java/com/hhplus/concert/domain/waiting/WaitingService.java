@@ -46,4 +46,10 @@ public class WaitingService {
             throw new WaitingException(WaitingError.NOT_ACTIVE_TOKEN);
         }
     }
+
+    @Transactional
+    public void expireToken(String token) {
+        WaitingEntity waiting = waitingRepository.findOneByToken(token).orElseThrow(() -> new WaitingException(WaitingError.TOKEN_NOT_FOUND));
+        waiting.expire();
+    }
 }

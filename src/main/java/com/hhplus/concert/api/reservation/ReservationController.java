@@ -4,7 +4,6 @@ import com.hhplus.concert.api.reservation.ReservationResponse.Reserved;
 import com.hhplus.concert.application.ReservationFacade;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
@@ -25,14 +24,6 @@ public class ReservationController implements IReservationController {
     ) {
         Reserved reservation = Reserved.from(reservationFacade.reserveSeat(request.toCommand(token)));
         return ResponseEntity.ok(reservation);
-    }
-
-    @PatchMapping
-    public ResponseEntity<ReservationResponse> payToReservation(
-        @RequestHeader("Hh-Waiting-Token") String token,
-        @RequestBody ReservationPayReqeust reqeust
-    ) {
-        return null;
     }
 
 }

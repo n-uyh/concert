@@ -15,4 +15,9 @@ public class ReservationRepositoryImpl implements ReservationRepository {
     public void insertOne(ReservationEntity entity) {
         jpaRepository.save(entity);
     }
+
+    @Override
+    public ReservationEntity findOneById(long reservationId) {
+        return jpaRepository.findById(reservationId).get();
+    }
 }
