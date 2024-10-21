@@ -22,7 +22,7 @@ public class ReservationController implements IReservationController {
         @RequestHeader("Hh-Waiting-Token") String token,
         @RequestBody ReservationRequest.Seat request
     ) {
-        Reserved reservation = Reserved.from(reservationFacade.reserveSeat(request.toCommand(token)));
+        Reserved reservation = Reserved.of(reservationFacade.reserveSeat(request.toCommand(token)));
         return ResponseEntity.ok(reservation);
     }
 

@@ -1,7 +1,7 @@
 package com.hhplus.concert.domain.payment;
 
-import com.hhplus.concert.application.PaymentInfo.CommonPayInfo;
-import com.hhplus.concert.application.ReservationInfo.ReservedInfo;
+import com.hhplus.concert.domain.payment.PaymentInfo.CommonPayInfo;
+import com.hhplus.concert.domain.reservation.ReservationInfo.ReservedInfo;
 import com.hhplus.concert.domain.payment.PaymentException.PayError;
 import java.time.LocalDateTime;
 import lombok.RequiredArgsConstructor;
@@ -30,7 +30,7 @@ public class PaymentService {
 
         paymentRepository.insertHistory(history);
 
-        return CommonPayInfo.from(payment);
+        return CommonPayInfo.of(payment);
     }
 
 }

@@ -1,8 +1,8 @@
 package com.hhplus.concert.api.payment;
 
-import com.hhplus.concert.application.PaymentInfo;
-import com.hhplus.concert.application.PaymentInfo.CommonPayInfo;
-import com.hhplus.concert.application.ReservationInfo.ReservedInfo;
+import com.hhplus.concert.domain.payment.PaymentInfo;
+import com.hhplus.concert.domain.payment.PaymentInfo.CommonPayInfo;
+import com.hhplus.concert.domain.reservation.ReservationInfo.ReservedInfo;
 
 public class PaymentResponse {
 
@@ -11,7 +11,7 @@ public class PaymentResponse {
         CommonPayInfo payment
     ) {
 
-        public static Payed from(PaymentInfo.PayedInfo info) {
+        public static Payed of(PaymentInfo.PayedInfo info) {
             return new Payed(info.reservation(), info.payment());
         }
     }

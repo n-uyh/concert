@@ -1,4 +1,4 @@
-package com.hhplus.concert.application;
+package com.hhplus.concert.domain.concert;
 
 import java.time.LocalDate;
 

@@ -1,7 +1,7 @@
 package com.hhplus.concert.api.user;
 
 import com.hhplus.concert.api.user.UserResponse.PointResult;
-import com.hhplus.concert.application.UserCommand.GetPoint;
+import com.hhplus.concert.domain.user.UserCommand.GetPoint;
 import com.hhplus.concert.application.UserFacade;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -25,7 +25,7 @@ public class UserController implements IUserController {
         @RequestHeader("Hh-Waiting-Token") String token,
         @RequestBody UserRequest.ChargePoint request
     ) {
-        PointResult result = PointResult.from(userFacade.charge(request.toCommand(token)));
+        PointResult result = PointResult.of(userFacade.charge(request.toCommand(token)));
         return ResponseEntity.ok(result);
     }
 
@@ -34,7 +34,7 @@ public class UserController implements IUserController {
         @RequestHeader("Hh-Waiting-Token") String token,
         @PathVariable long userId
     ) {
-        PointResult result = PointResult.from(userFacade.getPoint(new GetPoint(token, userId)));
+        PointResult result = PointResult.of(userFacade.getPoint(new GetPoint(token, userId)));
         return ResponseEntity.ok(result);
     }
 

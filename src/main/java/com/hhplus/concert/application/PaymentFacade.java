@@ -1,8 +1,9 @@
 package com.hhplus.concert.application;
 
-import com.hhplus.concert.application.PaymentInfo.CommonPayInfo;
-import com.hhplus.concert.application.PaymentInfo.PayedInfo;
-import com.hhplus.concert.application.ReservationInfo.ReservedInfo;
+import com.hhplus.concert.domain.payment.PaymentInfo.CommonPayInfo;
+import com.hhplus.concert.domain.payment.PaymentInfo.PayedInfo;
+import com.hhplus.concert.domain.reservation.ReservationInfo.ReservedInfo;
+import com.hhplus.concert.domain.payment.PaymentCommand;
 import com.hhplus.concert.domain.payment.PaymentService;
 import com.hhplus.concert.domain.reservation.ReservationService;
 import com.hhplus.concert.domain.waiting.WaitingService;

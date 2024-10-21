@@ -1,7 +1,5 @@
-package com.hhplus.concert.application;
+package com.hhplus.concert.domain.reservation;
 
-import com.hhplus.concert.domain.reservation.ReservationEntity;
-import com.hhplus.concert.domain.reservation.ReservationStatus;
 import java.time.LocalDateTime;
 
 public class ReservationInfo {
@@ -19,7 +17,7 @@ public class ReservationInfo {
             return status.equals(ReservationStatus.RESERVED.name());
         }
 
-        public static ReservedInfo from(ReservationEntity entity) {
+        public static ReservedInfo of(ReservationEntity entity) {
             return new ReservedInfo(entity.getId(), entity.getUserId(), entity.getConcertSeatId(), entity.getPrice(), entity.getStatus().name(), entity.getCreatedAt(), entity.getExpiresAt());
         }
 

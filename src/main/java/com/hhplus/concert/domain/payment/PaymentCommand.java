@@ -1,4 +1,4 @@
-package com.hhplus.concert.application;
+package com.hhplus.concert.domain.payment;
 
 public class PaymentCommand {
 

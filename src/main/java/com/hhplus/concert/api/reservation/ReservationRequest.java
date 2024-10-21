@@ -1,6 +1,6 @@
 package com.hhplus.concert.api.reservation;
 
-import com.hhplus.concert.application.ReservationCommand;
+import com.hhplus.concert.domain.reservation.ReservationCommand;
 import io.swagger.v3.oas.annotations.media.Schema;
 
 public class ReservationRequest {

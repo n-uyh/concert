@@ -1,6 +1,4 @@
-package com.hhplus.concert.application;
-
-import com.hhplus.concert.domain.user.UserEntity;
+package com.hhplus.concert.domain.user;
 
 public class UserInfo {
     public record Point(
@@ -8,7 +6,7 @@ public class UserInfo {
         long point
     ) {
 
-        public static Point from(UserEntity entity) {
+        public static Point of(UserEntity entity) {
             return new UserInfo.Point(entity.getId(), entity.getPoint());
         }
     }

@@ -3,7 +3,7 @@ package com.hhplus.concert.domain.user;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.when;
 
-import com.hhplus.concert.application.UserInfo.Point;
+import com.hhplus.concert.domain.user.UserInfo.Point;
 import java.util.Optional;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;

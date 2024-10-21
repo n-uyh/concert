@@ -6,8 +6,8 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-import com.hhplus.concert.application.ConcertInfo.SeatInfo;
-import com.hhplus.concert.application.ReservationInfo.ReservedInfo;
+import com.hhplus.concert.domain.concert.ConcertInfo.SeatInfo;
+import com.hhplus.concert.domain.reservation.ReservationInfo.ReservedInfo;
 import java.time.Duration;
 import java.time.LocalDateTime;
 import org.junit.jupiter.api.DisplayName;

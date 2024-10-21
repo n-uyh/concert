@@ -1,4 +1,4 @@
-package com.hhplus.concert.application;
+package com.hhplus.concert.domain.reservation;
 
 public class ReservationCommand {
     public record ReserveSeat(

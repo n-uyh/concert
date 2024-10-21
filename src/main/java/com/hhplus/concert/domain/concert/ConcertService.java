@@ -1,7 +1,6 @@
 package com.hhplus.concert.domain.concert;
 
-import com.hhplus.concert.application.ConcertInfo;
-import com.hhplus.concert.application.ConcertInfo.SeatInfo;
+import com.hhplus.concert.domain.concert.ConcertInfo.SeatInfo;
 import java.time.LocalDate;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
@@ -18,14 +17,14 @@ public class ConcertService {
         List<ConcertEntity> concerts = concertRepository.findAllByConcertDateBetween(
             from, end);
 
-        return concerts.stream().map(ConcertInfo.Common::from).toList();
+        return concerts.stream().map(ConcertInfo.Common::of).toList();
     }
 
     public List<SeatInfo> findAllSeatsByConcertId(long concertId) {
         List<ConcertSeatEntity> seats = concertRepository.findAllSeatsByConcertId(
             concertId);
 
-        return seats.stream().map(SeatInfo::from).toList();
+        return seats.stream().map(SeatInfo::of).toList();
     }
 
     @Transactional
@@ -33,6 +32,6 @@ public class ConcertService {
         ConcertSeatEntity seat = concertRepository.findOneBySeatIdWithLock(seatId);
         seat.checkOccupied();
         seat.occupy();
-        return SeatInfo.from(seat);
+        return SeatInfo.of(seat);
     }
 }

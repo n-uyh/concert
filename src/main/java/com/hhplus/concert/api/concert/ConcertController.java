@@ -4,7 +4,6 @@ import com.hhplus.concert.api.concert.ConcertRequest.Available;
 import com.hhplus.concert.api.concert.ConcertResponse.ConcertList;
 import com.hhplus.concert.api.concert.ConcertResponse.SeatList;
 import com.hhplus.concert.application.ConcertFacade;
-import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -26,7 +25,7 @@ public class ConcertController implements IConcertController {
         @RequestHeader("Hh-Waiting-Token") String token,
         @ModelAttribute Available request
     ) {
-        ConcertList concerts = ConcertList.from(concertFacade.findAllAvailable(request.toCommand(token)));
+        ConcertList concerts = ConcertList.of(concertFacade.findAllAvailable(request.toCommand(token)));
         return ResponseEntity.ok(concerts);
     }
 
@@ -35,7 +34,7 @@ public class ConcertController implements IConcertController {
         @RequestHeader("Hh-Waiting-Token") String token,
         @PathVariable long concertId
     ) {
-        SeatList seats = SeatList.from(concertFacade.findAllSeatsByConcertId(token, concertId));
+        SeatList seats = SeatList.of(concertFacade.findAllSeatsByConcertId(token, concertId));
         return ResponseEntity.ok(seats);
     }
 

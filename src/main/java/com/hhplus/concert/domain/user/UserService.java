@@ -1,6 +1,5 @@
 package com.hhplus.concert.domain.user;
 
-import com.hhplus.concert.application.UserInfo;
 import com.hhplus.concert.domain.user.UserException.UserError;
 import java.time.LocalDateTime;
 import lombok.RequiredArgsConstructor;
@@ -24,13 +23,13 @@ public class UserService {
             PointType.CHARGE, LocalDateTime.now());
         userRepository.insertPointHistory(history);
 
-        return UserInfo.Point.from(user);
+        return UserInfo.Point.of(user);
     }
 
     public UserInfo.Point getPoint(long userId) {
         UserEntity user = userRepository.findOneUser(userId).orElseThrow(
             () -> new UserException(UserError.USER_NOT_FOUND));
-        return UserInfo.Point.from(user);
+        return UserInfo.Point.of(user);
     }
 
 }

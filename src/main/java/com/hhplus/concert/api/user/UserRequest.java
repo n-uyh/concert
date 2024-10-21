@@ -1,6 +1,6 @@
 package com.hhplus.concert.api.user;
 
-import com.hhplus.concert.application.UserCommand;
+import com.hhplus.concert.domain.user.UserCommand;
 import io.swagger.v3.oas.annotations.media.Schema;
 
 public class UserRequest {

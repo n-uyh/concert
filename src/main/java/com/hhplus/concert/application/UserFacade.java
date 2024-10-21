@@ -1,5 +1,7 @@
 package com.hhplus.concert.application;
 
+import com.hhplus.concert.domain.user.UserCommand;
+import com.hhplus.concert.domain.user.UserInfo;
 import com.hhplus.concert.domain.user.UserService;
 import com.hhplus.concert.domain.waiting.WaitingService;
 import lombok.RequiredArgsConstructor;

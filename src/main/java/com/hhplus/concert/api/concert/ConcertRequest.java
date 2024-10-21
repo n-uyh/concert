@@ -1,6 +1,6 @@
 package com.hhplus.concert.api.concert;
 
-import com.hhplus.concert.application.ConcertCommand;
+import com.hhplus.concert.domain.concert.ConcertCommand;
 import io.swagger.v3.oas.annotations.media.Schema;
 import java.time.LocalDate;
 import org.springframework.format.annotation.DateTimeFormat;

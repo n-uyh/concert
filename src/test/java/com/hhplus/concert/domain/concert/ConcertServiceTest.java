@@ -5,8 +5,8 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.when;
 
-import com.hhplus.concert.application.ConcertInfo.Common;
-import com.hhplus.concert.application.ConcertInfo.SeatInfo;
+import com.hhplus.concert.domain.concert.ConcertInfo.Common;
+import com.hhplus.concert.domain.concert.ConcertInfo.SeatInfo;
 import com.hhplus.concert.domain.concert.ConcertException.ConcertError;
 import java.time.LocalDate;
 import java.time.LocalTime;

@@ -10,7 +10,7 @@ public class WaitingResponse {
         String status,
         LocalDateTime createdAt
     ) {
-        public static CreatedResult from(WaitingInfo.CreatedInfo info) {
+        public static CreatedResult of(WaitingInfo.CreatedInfo info) {
             return new CreatedResult(info.token(), info.status(), info.createdAt());
         }
     }
@@ -22,7 +22,7 @@ public class WaitingResponse {
         LocalDateTime updatedAt
     ) {
 
-        public static TokenResult from(TokenInfo info) {
+        public static TokenResult of(TokenInfo info) {
             return new TokenResult(info.token(), info.status(), info.waitingNo(), info.updatedAt());
         }
     }

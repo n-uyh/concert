@@ -1,7 +1,6 @@
-package com.hhplus.concert.application;
+package com.hhplus.concert.domain.payment;
 
-import com.hhplus.concert.application.ReservationInfo.ReservedInfo;
-import com.hhplus.concert.domain.payment.PaymentEntity;
+import com.hhplus.concert.domain.reservation.ReservationInfo.ReservedInfo;
 import java.time.LocalDateTime;
 
 public class PaymentInfo {
@@ -11,7 +10,7 @@ public class PaymentInfo {
         String payStatus,
         LocalDateTime payedAt
     ) {
-       public static CommonPayInfo from(PaymentEntity entity) {
+       public static CommonPayInfo of(PaymentEntity entity) {
            return new CommonPayInfo(entity.getId(), entity.getStatus().name(), entity.getCreatedAt());
        }
     }

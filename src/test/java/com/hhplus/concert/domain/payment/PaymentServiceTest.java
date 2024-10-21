@@ -6,8 +6,8 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 
-import com.hhplus.concert.application.PaymentInfo.CommonPayInfo;
-import com.hhplus.concert.application.ReservationInfo.ReservedInfo;
+import com.hhplus.concert.domain.payment.PaymentInfo.CommonPayInfo;
+import com.hhplus.concert.domain.reservation.ReservationInfo.ReservedInfo;
 import com.hhplus.concert.domain.payment.PaymentException.PayError;
 import com.hhplus.concert.domain.reservation.ReservationStatus;
 import java.time.LocalDateTime;

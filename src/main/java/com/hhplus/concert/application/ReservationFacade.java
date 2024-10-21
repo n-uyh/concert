@@ -1,8 +1,9 @@
 package com.hhplus.concert.application;
 
-import com.hhplus.concert.application.ConcertInfo.SeatInfo;
-import com.hhplus.concert.application.ReservationInfo.ReservedInfo;
+import com.hhplus.concert.domain.concert.ConcertInfo.SeatInfo;
+import com.hhplus.concert.domain.reservation.ReservationInfo.ReservedInfo;
 import com.hhplus.concert.domain.concert.ConcertService;
+import com.hhplus.concert.domain.reservation.ReservationCommand;
 import com.hhplus.concert.domain.reservation.ReservationService;
 import com.hhplus.concert.domain.waiting.WaitingService;
 import lombok.RequiredArgsConstructor;
