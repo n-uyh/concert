@@ -1,7 +1,6 @@
 package com.hhplus.concert.domain.waiting;
 
 import com.hhplus.concert.domain.waiting.WaitingException.WaitingError;
-import com.hhplus.concert.domain.waiting.WaitingInfo.CreatedInfo;
 import com.hhplus.concert.domain.waiting.WaitingInfo.TokenInfo;
 import java.time.LocalDateTime;
 import java.util.List;
@@ -17,14 +16,14 @@ public class WaitingService {
     private final WaitingRepository waitingRepository;
 
     @Transactional
-    public CreatedInfo createToken() {
+    public WaitingInfo.Created issue() {
         WaitingEntity waiting = WaitingEntity.create(LocalDateTime.now());
-        waitingRepository.insertOne(waiting);
-        return new CreatedInfo(waiting);
+        waitingRepository.save(waiting);
+        return new WaitingInfo.Created(waiting);
     }
 
     @Transactional(readOnly = true)
-    public TokenInfo getTokenWithWaitingNo(String token) {
+    public WaitingInfo.TokenInfo getToken(String token) {
         WaitingEntity waiting = waitingRepository.findOneByToken(token).orElseThrow(
             () -> new WaitingException(WaitingError.TOKEN_NOT_FOUND));
 

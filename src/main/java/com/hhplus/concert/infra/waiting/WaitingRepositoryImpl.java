@@ -16,7 +16,7 @@ public class WaitingRepositoryImpl implements WaitingRepository {
     private final WaitingJpaRepository jpaRepository;
 
     @Override
-    public void insertOne(WaitingEntity entity) {
+    public void save(WaitingEntity entity) {
         jpaRepository.save(entity);
     }
 

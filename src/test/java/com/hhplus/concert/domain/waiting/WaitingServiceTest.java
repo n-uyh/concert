@@ -7,7 +7,7 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import com.hhplus.concert.domain.waiting.WaitingException.WaitingError;
-import com.hhplus.concert.domain.waiting.WaitingInfo.CreatedInfo;
+import com.hhplus.concert.domain.waiting.WaitingInfo.Created;
 import com.hhplus.concert.domain.waiting.WaitingInfo.TokenInfo;
 import java.time.LocalDateTime;
 import java.util.List;
@@ -31,8 +31,8 @@ class WaitingServiceTest {
 
     @Test
     @DisplayName("대기열토큰을 발급시 토큰의 상태는 WAIT이다.")
-    void createTokenThenStatusWait() {
-        CreatedInfo token = waitingService.createToken();
+    void issueThenStatusWait() {
+        Created token = waitingService.issue();
         assertEquals(WaitingStatus.WAIT.name(), token.status());
     }
 
@@ -43,7 +43,7 @@ class WaitingServiceTest {
         when(waitingRepository.findOneByToken(token)).thenReturn(Optional.empty());
 
         WaitingException exception = assertThrows(WaitingException.class,
-            () -> waitingService.getTokenWithWaitingNo(token));
+            () -> waitingService.getToken(token));
 
         assertEquals(WaitingError.TOKEN_NOT_FOUND, exception.getErrorCode());
     }
@@ -59,7 +59,7 @@ class WaitingServiceTest {
         );
 
         WaitingException exception = assertThrows(WaitingException.class,
-            () -> waitingService.getTokenWithWaitingNo(token));
+            () -> waitingService.getToken(token));
 
         assertEquals(WaitingError.EXPIRED_TOKEN, exception.getErrorCode());
     }
@@ -75,7 +75,7 @@ class WaitingServiceTest {
             Optional.of(new WaitingEntity(1, token, active, someDateTime, someDateTime))
         );
 
-        TokenInfo result = waitingService.getTokenWithWaitingNo(token);
+        TokenInfo result = waitingService.getToken(token);
         assertEquals(token, result.token());
         assertEquals(active.name(), result.status());
         assertEquals(0, result.waitingNo());
@@ -101,7 +101,7 @@ class WaitingServiceTest {
             )
         );
 
-        TokenInfo result = waitingService.getTokenWithWaitingNo(token);
+        TokenInfo result = waitingService.getToken(token);
         assertEquals(token, result.token());
         assertEquals(status.name(), result.status());
         assertEquals(1, result.waitingNo());

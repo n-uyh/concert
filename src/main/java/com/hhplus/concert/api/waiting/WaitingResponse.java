@@ -10,7 +10,7 @@ public class WaitingResponse {
         String status,
         LocalDateTime createdAt
     ) {
-        public static CreatedResult of(WaitingInfo.CreatedInfo info) {
+        public static CreatedResult of(WaitingInfo.Created info) {
             return new CreatedResult(info.token(), info.status(), info.createdAt());
         }
     }

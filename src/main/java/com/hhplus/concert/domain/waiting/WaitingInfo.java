@@ -3,13 +3,13 @@ package com.hhplus.concert.domain.waiting;
 import java.time.LocalDateTime;
 
 public class WaitingInfo {
-    public record CreatedInfo(
+    public record Created(
         String token,
         String status,
         LocalDateTime createdAt
     ) {
 
-        public CreatedInfo(WaitingEntity entity) {
+        public Created(WaitingEntity entity) {
             this(entity.getToken(), entity.status(), entity.getCreatedAt());
         }
     }
