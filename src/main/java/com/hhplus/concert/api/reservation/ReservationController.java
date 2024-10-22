@@ -19,10 +19,9 @@ public class ReservationController implements IReservationController {
 
     @PostMapping
     public ResponseEntity<ReservationResponse.Reserved> createReservation(
-        @RequestHeader("Hh-Waiting-Token") String token,
         @RequestBody ReservationRequest.Seat request
     ) {
-        Reserved reservation = Reserved.of(reservationFacade.reserveSeat(request.toCommand(token)));
+        Reserved reservation = Reserved.of(reservationFacade.reserveSeat(request.toCommand()));
         return ResponseEntity.ok(reservation);
     }
 

@@ -11,8 +11,8 @@ public class UserRequest {
         long amount
     ) {
 
-        public UserCommand.ChargePoint toCommand(String token) {
-            return new UserCommand.ChargePoint(token, userId, amount);
+        public UserCommand.ChargePoint toCommand() {
+            return new UserCommand.ChargePoint(userId, amount);
         }
 
     }

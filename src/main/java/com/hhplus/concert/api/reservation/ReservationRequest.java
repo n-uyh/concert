@@ -11,8 +11,8 @@ public class ReservationRequest {
         @Schema(description = "사용자id")
         long userId
     ) {
-        public ReservationCommand.ReserveSeat toCommand(String token) {
-            return new ReservationCommand.ReserveSeat(token, seatId, userId);
+        public ReservationCommand.ReserveSeat toCommand() {
+            return new ReservationCommand.ReserveSeat(seatId, userId);
         }
     }
 }

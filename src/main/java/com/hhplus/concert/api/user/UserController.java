@@ -22,19 +22,17 @@ public class UserController implements IUserController {
 
     @PatchMapping("charge")
     public ResponseEntity<UserResponse.PointResult> chargeUserPoint(
-        @RequestHeader("Hh-Waiting-Token") String token,
         @RequestBody UserRequest.ChargePoint request
     ) {
-        PointResult result = PointResult.of(userFacade.charge(request.toCommand(token)));
+        PointResult result = PointResult.of(userFacade.charge(request.toCommand()));
         return ResponseEntity.ok(result);
     }
 
     @GetMapping("/{userId}/point")
     public ResponseEntity<UserResponse.PointResult> point(
-        @RequestHeader("Hh-Waiting-Token") String token,
         @PathVariable long userId
     ) {
-        PointResult result = PointResult.of(userFacade.getPoint(new GetPoint(token, userId)));
+        PointResult result = PointResult.of(userFacade.getPoint(new GetPoint(userId)));
         return ResponseEntity.ok(result);
     }
 

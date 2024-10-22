@@ -19,8 +19,8 @@ public class ConcertFacade {
         return concertService.findAllAvailableConcertBetweenFromAndTo(command.from(), command.end());
     }
 
-    public List<SeatInfo> findAllSeatsByConcertId(String token, long concertId) {
-        return concertService.findAllSeatsByConcertId(concertId);
+    public List<SeatInfo> findAllSeatsByConcertId(ConcertCommand.Seat command) {
+        return concertService.findAllSeatsByConcertId(command.concertId());
     }
 
 }
