@@ -14,13 +14,11 @@ import org.springframework.transaction.annotation.Transactional;
 @RequiredArgsConstructor
 public class ReservationFacade {
 
-    private final WaitingService waitingService;
     private final ConcertService concertService;
     private final ReservationService reservationService;
 
     @Transactional
     public ReservedInfo reserveSeat(ReservationCommand.ReserveSeat command) {
-        waitingService.checkTokenIsActive(command.token());
         SeatInfo seatInfo = concertService.findAndOccupySeat(command.seatId());
         return reservationService.reserveSeat(seatInfo, command.userId());
     }

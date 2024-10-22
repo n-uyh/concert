@@ -19,8 +19,6 @@ public class PaymentFacade {
     private final PaymentService paymentService;
 
     public PayedInfo createPayment(PaymentCommand.CreatePayment command) {
-        waitingService.checkTokenIsActive(command.token());
-
         ReservedInfo reserved = reservationService.findReservationWithStatusUpdate(
             command.reservationId());
 
