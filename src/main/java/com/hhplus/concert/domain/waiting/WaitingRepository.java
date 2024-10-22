@@ -10,4 +10,6 @@ public interface WaitingRepository {
     Optional<WaitingEntity> findOneByToken(String token);
 
     List<WaitingEntity> findAllStatusWaiting();
+
+    List<WaitingEntity> findActivateTargets(WaitingStatus status, int activatePersonnel);
 }

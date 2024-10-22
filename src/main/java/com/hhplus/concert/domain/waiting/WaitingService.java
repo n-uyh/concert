@@ -6,6 +6,7 @@ import com.hhplus.concert.domain.waiting.WaitingInfo.TokenInfo;
 import java.time.LocalDateTime;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -52,4 +53,15 @@ public class WaitingService {
         WaitingEntity waiting = waitingRepository.findOneByToken(token).orElseThrow(() -> new WaitingException(WaitingError.TOKEN_NOT_FOUND));
         waiting.expire();
     }
+
+    @Scheduled(fixedDelay = 1500, initialDelay = 2000)
+    @Transactional
+    public void activate() {
+        List<WaitingEntity> targets = waitingRepository.findActivateTargets(WaitingStatus.WAIT, WaitingEntity.ACTIVATE_PERSONNEL);
+        if (targets.isEmpty()) {
+            throw new WaitingException(WaitingError.ACTIVATE_TARGET_NOT_FOUND);
+        }
+        targets.forEach(WaitingEntity::activate);
+    }
+
 }
