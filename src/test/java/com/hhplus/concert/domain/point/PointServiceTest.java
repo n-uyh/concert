@@ -1,8 +1,10 @@
 package com.hhplus.concert.domain.point;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.when;
 
+import com.hhplus.concert.domain.point.PointException.PointError;
 import java.util.Optional;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -48,6 +50,41 @@ class PointServiceTest {
 
         assertEquals(userId, point.userId());
         assertEquals(100_000, point.point());
+    }
+
+    @Test
+    @DisplayName("포인트로 결제를 시도했으나 포인트 정보를 찾을 수 없으면 USER_POINT_NOT_FOUND 에러가 발생한다.")
+    void payByPointButPointNotFound() {
+        long userId = 1;
+        when(pointRepository.findUserPointWithLock(userId)).thenReturn(null);
+
+        PointException exception = assertThrows(PointException.class,
+            () -> pointService.pay(new PointCommand.Pay(userId, 50_000)));
+
+        assertEquals(PointError.USER_POINT_NOT_FOUND, exception.getErrorCode());
+    }
+
+    @Test
+    @DisplayName("포인트로 결제를 시도했으나 결제금액보다 포인트 잔액이 적은 경우 INSUFFICIENT_POINT_ERROR 에러가 발생한다.")
+    void payByPointButInsufficientPointError() {
+        long userId = 1;
+        when(pointRepository.findUserPointWithLock(userId)).thenReturn(new PointEntity(1,userId, 40_000));
+
+        PointException exception = assertThrows(PointException.class,
+            () -> pointService.pay(new PointCommand.Pay(userId, 50_000)));
+
+        assertEquals(PointError.INSUFFICIENT_POINT_ERROR, exception.getErrorCode());
+    }
+
+    @Test
+    @DisplayName("포인트로 결제를 시도 시 사용자의 포인트 잔액이 충분한 경우 사용자의 포인트가 결제금액만큼 차감된다.")
+    void payByPointAndSuccess() {
+        long userId = 1;
+        PointEntity point = new PointEntity(1, userId, 110_000);
+        when(pointRepository.findUserPointWithLock(userId)).thenReturn(point);
+        pointService.pay(new PointCommand.Pay(userId, 50_000));
+
+        assertEquals(60_000, point.getPoint());
     }
 
 }
