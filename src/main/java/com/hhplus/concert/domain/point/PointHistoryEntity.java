@@ -1,4 +1,4 @@
-package com.hhplus.concert.domain.user;
+package com.hhplus.concert.domain.point;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;

@@ -1,4 +1,4 @@
-package com.hhplus.concert.domain.user;
+package com.hhplus.concert.domain.point;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -14,9 +14,15 @@ import lombok.NoArgsConstructor;
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
-@Table(name = "user")
-public class UserEntity {
+@Table(name = "point")
+public class PointEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
+    private long userId;
+    private long point;
+
+    public void charge(long amount) {
+        this.point += amount;
+    }
 }

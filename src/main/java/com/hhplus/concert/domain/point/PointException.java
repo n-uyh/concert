@@ -1,21 +1,21 @@
-package com.hhplus.concert.domain.user;
+package com.hhplus.concert.domain.point;
 
 import com.hhplus.concert.support.BaseErrorCode;
 import com.hhplus.concert.support.BaseException;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
-public class UserException extends BaseException {
+public class PointException extends BaseException {
 
-    public UserException(UserError userError) {
-        super(userError);
+    public PointException(PointError pointError) {
+        super(pointError);
     }
 
     @Getter
     @AllArgsConstructor
-    public enum UserError implements BaseErrorCode {
+    public enum PointError implements BaseErrorCode {
 
-        USER_NOT_FOUND(404, "US001", "사용자정보를 찾을 수 없습니다."),
+        USER_POINT_NOT_FOUND(404, "UP001", "사용자 포인트 정보를 찾을 수 없습니다."),
         ;
 
         private final int status;

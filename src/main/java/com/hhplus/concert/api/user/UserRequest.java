@@ -1,6 +1,6 @@
 package com.hhplus.concert.api.user;
 
-import com.hhplus.concert.domain.user.UserCommand;
+import com.hhplus.concert.domain.point.PointCommand.Charge;
 import io.swagger.v3.oas.annotations.media.Schema;
 
 public class UserRequest {
@@ -11,8 +11,8 @@ public class UserRequest {
         long amount
     ) {
 
-        public UserCommand.ChargePoint toCommand() {
-            return new UserCommand.ChargePoint(userId, amount);
+        public Charge toCommand() {
+            return new Charge(userId, amount);
         }
 
     }
