@@ -13,21 +13,21 @@ public class UserService {
     private final UserRepository userRepository;
 
     @Transactional
-    public UserInfo.Point chargePoint(long userId, long amount) {
-        UserEntity user = userRepository.findOneUser(userId).orElseThrow(
+    public UserInfo.Point chargePoint(UserCommand.ChargePoint command) {
+        UserEntity user = userRepository.findOneUser(command.userId()).orElseThrow(
             () -> new UserException(UserError.USER_NOT_FOUND));
 
-        user.charge(amount);
+        user.charge(command.amount());
 
-        PointHistoryEntity history = new PointHistoryEntity(0, user.getId(), amount,
+        PointHistoryEntity history = new PointHistoryEntity(0, user.getId(), command.amount(),
             PointType.CHARGE, LocalDateTime.now());
         userRepository.insertPointHistory(history);
 
         return UserInfo.Point.of(user);
     }
 
-    public UserInfo.Point getPoint(long userId) {
-        UserEntity user = userRepository.findOneUser(userId).orElseThrow(
+    public UserInfo.Point getPoint(UserCommand.GetPoint command) {
+        UserEntity user = userRepository.findOneUser(command.userId()).orElseThrow(
             () -> new UserException(UserError.USER_NOT_FOUND));
         return UserInfo.Point.of(user);
     }

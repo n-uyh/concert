@@ -31,7 +31,7 @@ public class UserServiceTest {
             Optional.of(new UserEntity(userId, 100_000))
         );
 
-        Point point = userService.chargePoint(userId, amount);
+        Point point = userService.chargePoint(new UserCommand.ChargePoint(userId, amount));
 
         assertEquals(userId, point.userId());
         assertEquals(120_000, point.point());
@@ -45,7 +45,7 @@ public class UserServiceTest {
             Optional.of(new UserEntity(userId, 100_000))
         );
 
-        Point point = userService.getPoint(userId);
+        Point point = userService.getPoint(new UserCommand.GetPoint(userId));
 
         assertEquals(userId, point.userId());
         assertEquals(100_000, point.point());
