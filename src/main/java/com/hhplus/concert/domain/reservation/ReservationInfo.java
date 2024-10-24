@@ -18,7 +18,7 @@ public class ReservationInfo {
         }
 
         public static ReservedInfo of(ReservationEntity entity) {
-            return new ReservedInfo(entity.getId(), entity.getUserId(), entity.getConcertSeatId(), entity.getPrice(), entity.getStatus().name(), entity.getCreatedAt(), entity.getExpiresAt());
+            return new ReservedInfo(entity.getId(), entity.getUserId(), entity.getConcertSeatId(), entity.getPrice(), entity.getStatus().name(), entity.getCreatedAt(), entity.getExpiredAt());
         }
 
     }

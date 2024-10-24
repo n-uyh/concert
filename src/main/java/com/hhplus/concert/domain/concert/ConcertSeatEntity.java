@@ -37,4 +37,8 @@ public class ConcertSeatEntity {
             throw new ConcertException(ConcertError.SEAT_ALREADY_OCCUPIED);
         }
     }
+
+    public void releaseOccupancy() {
+        this.occupied = false;
+    }
 }

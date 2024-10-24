@@ -1,8 +1,10 @@
 package com.hhplus.concert.domain.reservation;
 
 import com.hhplus.concert.domain.concert.ConcertInfo.SeatInfo;
+import com.hhplus.concert.domain.reservation.ReservationException.ReserveError;
 import com.hhplus.concert.domain.reservation.ReservationInfo.ReservedInfo;
 import java.time.LocalDateTime;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -25,7 +27,21 @@ public class ReservationService {
     @Transactional
     public ReservedInfo findReservationWithStatusUpdate(long reservationId) {
         ReservationEntity reservation = reservationRepository.findOneById(reservationId);
-        reservation.updateExpired(LocalDateTime.now()); // 만료 시간 지났으면 업데이트
+        reservation.expire(LocalDateTime.now()); // 만료 시간 지났으면 업데이트
         return ReservedInfo.of(reservation);
     }
+
+    @Transactional
+    public List<Long> expire(LocalDateTime baseTime) {
+        List<ReservationEntity> targets = reservationRepository.findExpireTargets(
+            ReservationStatus.RESERVED, baseTime);
+
+        if (targets.isEmpty()) {
+            throw new ReservationException(ReserveError.EXPIRE_TARGETS_NOT_FOUND);
+        }
+
+        targets.forEach((r) -> r.expire(baseTime));
+        return targets.stream().map(ReservationEntity::getConcertSeatId).toList();
+    }
+
 }

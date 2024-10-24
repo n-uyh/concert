@@ -16,6 +16,7 @@ public class ConcertException extends BaseException {
     public enum ConcertError implements BaseErrorCode {
 
         SEAT_ALREADY_OCCUPIED(404, "CS001", "이미 선택된 좌석입니다."),
+        RELEASE_TARGETS_NOT_FOUND(404, "CS002", "점유해제대상 좌석이 없습니다.")
         ;
 
         private final int status;

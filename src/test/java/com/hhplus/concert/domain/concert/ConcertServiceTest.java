@@ -1,6 +1,7 @@
 package com.hhplus.concert.domain.concert;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.when;
@@ -95,6 +96,37 @@ class ConcertServiceTest {
 
         assertEquals(seatId, seat.seatId());
         assertTrue(seat.occupied());
+    }
+
+    @Test
+    @DisplayName("좌석점유 해제 시 해제 대상 좌석이 없으면 RELEASE_TARGETS_NOT_FOUND 에러가 발생한다.")
+    void releaseSeatButTargetsNotFound() {
+        List<Long> seatIds = List.of(1L,2L,3L);
+
+        when(concertRepository.findReleaseTargetSeats(seatIds)).thenReturn(List.of());
+
+        ConcertException exception = assertThrows(ConcertException.class,
+            () -> concertService.releaseSeat(seatIds));
+
+        assertEquals(ConcertError.RELEASE_TARGETS_NOT_FOUND, exception.getErrorCode());
+    }
+
+    @Test
+    @DisplayName("좌석점유 해제가 성공하면 좌석의 occupied 정보가 false로 업데이트 된다.")
+    void releaseSeatSuccessThenSeatIsNotOccupied() {
+        List<Long> seatIds = List.of(1L,2L,3L);
+        boolean occupied = true;
+
+        List<ConcertSeatEntity> targets = List.of(
+            new ConcertSeatEntity(seatIds.get(0), 1, 1, 100_000, occupied),
+            new ConcertSeatEntity(seatIds.get(1), 1, 2, 100_000, occupied),
+            new ConcertSeatEntity(seatIds.get(2), 1, 3, 100_000, occupied)
+        );
+        when(concertRepository.findReleaseTargetSeats(seatIds)).thenReturn(targets);
+
+        concertService.releaseSeat(seatIds);
+
+        assertFalse(targets.get(0).isOccupied());
     }
 
 

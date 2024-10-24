@@ -1,5 +1,6 @@
 package com.hhplus.concert.domain.concert;
 
+import com.hhplus.concert.domain.concert.ConcertException.ConcertError;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -28,5 +29,16 @@ public class ConcertService {
         seat.checkOccupied();
         seat.occupy();
         return ConcertInfo.SeatInfo.of(seat);
+    }
+
+    @Transactional
+    public void releaseSeat(List<Long> seatIds) {
+        List<ConcertSeatEntity> targets = concertRepository.findReleaseTargetSeats(seatIds);
+
+        if (targets.isEmpty()) {
+            throw new ConcertException(ConcertError.RELEASE_TARGETS_NOT_FOUND);
+        }
+
+        targets.forEach(ConcertSeatEntity::releaseOccupancy);
     }
 }
