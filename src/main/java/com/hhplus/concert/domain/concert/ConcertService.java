@@ -23,7 +23,7 @@ public class ConcertService {
     }
 
     @Transactional
-    public ConcertInfo.SeatInfo findAndOccupySeat(long seatId) {
+    public ConcertInfo.SeatInfo occupySeat(long seatId) {
         ConcertSeatEntity seat = concertRepository.findOneBySeatIdWithLock(seatId);
         seat.checkOccupied();
         seat.occupy();

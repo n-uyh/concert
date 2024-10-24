@@ -77,21 +77,21 @@ class ConcertServiceTest {
         );
 
         ConcertException exception = assertThrows(ConcertException.class,
-            () -> concertService.findAndOccupySeat(seatId));
+            () -> concertService.occupySeat(seatId));
 
         assertEquals(ConcertError.SEAT_ALREADY_OCCUPIED, exception.getErrorCode());
     }
 
     @Test
     @DisplayName("좌석을 찾고 점유성공한다.")
-    void findAndOccupySeatSuccess() {
+    void occupySeatSuccess() {
         long seatId = 1;
         boolean occupied = false;
         when(concertRepository.findOneBySeatIdWithLock(seatId)).thenReturn(
             new ConcertSeatEntity(seatId, 1, 1,100_000, occupied)
         );
 
-        SeatInfo seat = concertService.findAndOccupySeat(seatId);
+        SeatInfo seat = concertService.occupySeat(seatId);
 
         assertEquals(seatId, seat.seatId());
         assertTrue(seat.occupied());
