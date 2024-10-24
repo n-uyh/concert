@@ -32,4 +32,12 @@ public class PointService {
         return PointInfo.Common.of(user);
     }
 
+    @Transactional
+    public void pay(PointCommand.Pay command) {
+        PointEntity point = pointRepository.findUserPointWithLock(command.userId());
+        if (point == null) {
+            throw new PointException(PointError.USER_POINT_NOT_FOUND);
+        }
+        point.pay(command.price());
+    }
 }

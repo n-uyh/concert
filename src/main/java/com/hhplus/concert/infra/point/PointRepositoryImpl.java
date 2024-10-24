@@ -23,4 +23,9 @@ public class PointRepositoryImpl implements PointRepository {
     public void insertPointHistory(PointHistoryEntity entity) {
         pointHistoryJpaRepository.save(entity);
     }
+
+    @Override
+    public PointEntity findUserPointWithLock(long userId) {
+        return pointJpaRepository.findOneWithLockByUserId(userId);
+    }
 }

@@ -1,5 +1,6 @@
 package com.hhplus.concert.domain.point;
 
+import com.hhplus.concert.domain.point.PointException.PointError;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -24,5 +25,12 @@ public class PointEntity {
 
     public void charge(long amount) {
         this.point += amount;
+    }
+
+    public void pay(long price) {
+        if (point < price) {
+            throw new PointException(PointError.INSUFFICIENT_POINT_ERROR);
+        }
+        this.point -= price;
     }
 }

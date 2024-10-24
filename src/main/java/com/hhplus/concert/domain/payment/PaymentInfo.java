@@ -5,19 +5,21 @@ import java.time.LocalDateTime;
 
 public class PaymentInfo {
 
-    public record CommonPayInfo(
+    public record Common(
         long payId,
+        long userId,
+        long price,
         String payStatus,
         LocalDateTime payedAt
     ) {
-       public static CommonPayInfo of(PaymentEntity entity) {
-           return new CommonPayInfo(entity.getId(), entity.getStatus().name(), entity.getCreatedAt());
+       public static Common of(PaymentEntity entity) {
+           return new Common(entity.getId(), entity.getUserId(), entity.getPrice(), entity.getStatus().name(), entity.getCreatedAt());
        }
     }
 
     public record PayedInfo(
         ReservedInfo reservation,
-        CommonPayInfo payment
+        Common payment
     ) {
     }
 

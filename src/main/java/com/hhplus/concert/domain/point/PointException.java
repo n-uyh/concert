@@ -16,7 +16,7 @@ public class PointException extends BaseException {
     public enum PointError implements BaseErrorCode {
 
         USER_POINT_NOT_FOUND(404, "UP001", "사용자 포인트 정보를 찾을 수 없습니다."),
-        ;
+        INSUFFICIENT_POINT_ERROR(400, "UP002", "잔액이 부족합니다.");
 
         private final int status;
         private final String code;

@@ -15,4 +15,11 @@ public class PointCommand {
 
     }
 
+    public record Pay(
+        long userId,
+        long price
+    ) {
+
+    }
+
 }

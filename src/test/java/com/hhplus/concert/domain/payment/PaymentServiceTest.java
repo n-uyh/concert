@@ -6,9 +6,8 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 
-import com.hhplus.concert.domain.payment.PaymentInfo.CommonPayInfo;
-import com.hhplus.concert.domain.reservation.ReservationInfo.ReservedInfo;
 import com.hhplus.concert.domain.payment.PaymentException.PayError;
+import com.hhplus.concert.domain.reservation.ReservationInfo.ReservedInfo;
 import com.hhplus.concert.domain.reservation.ReservationStatus;
 import java.time.LocalDateTime;
 import org.junit.jupiter.api.DisplayName;
@@ -51,7 +50,7 @@ class PaymentServiceTest {
         ReservedInfo target = new ReservedInfo(1, 1, 1, 100_000, status.name(), datetime,
             datetime.plusMinutes(5));
 
-        CommonPayInfo payment = paymentService.createPayment(target);
+        PaymentInfo.Common payment = paymentService.createPayment(target);
 
         verify(paymentRepository, times(1)).insertOne(any(PaymentEntity.class));
         verify(paymentRepository, times(1)).insertHistory(any(PaymentHistoryEntity.class));
