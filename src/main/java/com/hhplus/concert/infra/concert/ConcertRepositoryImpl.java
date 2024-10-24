@@ -16,7 +16,7 @@ public class ConcertRepositoryImpl implements ConcertRepository {
     private final ConcertSeatsJpaRepository concertSeatsJpaRepository;
 
     @Override
-    public List<ConcertEntity> findAllByConcertDateBetween(LocalDate from, LocalDate end) {
+    public List<ConcertEntity> findAvailable(LocalDate from, LocalDate end) {
         return concertJpaRepository.findAllByConcertDateBetween(from, end);
     }
 

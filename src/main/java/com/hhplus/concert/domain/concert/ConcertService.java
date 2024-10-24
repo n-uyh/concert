@@ -1,7 +1,5 @@
 package com.hhplus.concert.domain.concert;
 
-import com.hhplus.concert.domain.concert.ConcertInfo.SeatInfo;
-import java.time.LocalDate;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -13,25 +11,22 @@ public class ConcertService {
 
     private final ConcertRepository concertRepository;
 
-    public List<ConcertInfo.Common> findAllAvailableConcertBetweenFromAndTo(LocalDate from, LocalDate end) {
-        List<ConcertEntity> concerts = concertRepository.findAllByConcertDateBetween(
-            from, end);
-
+    public List<ConcertInfo.Common> findAvailable(ConcertCommand.Available command) {
+        List<ConcertEntity> concerts = concertRepository.findAvailable(command.from(), command.end());
         return concerts.stream().map(ConcertInfo.Common::of).toList();
     }
 
-    public List<SeatInfo> findAllSeatsByConcertId(long concertId) {
-        List<ConcertSeatEntity> seats = concertRepository.findAllSeatsByConcertId(
-            concertId);
+    public List<ConcertInfo.SeatInfo> findAvailableConcertSeats(ConcertCommand.Seat command) {
+        List<ConcertSeatEntity> seats = concertRepository.findAllSeatsByConcertId(command.concertId());
 
-        return seats.stream().map(SeatInfo::of).toList();
+        return seats.stream().map(ConcertInfo.SeatInfo::of).toList();
     }
 
     @Transactional
-    public SeatInfo findAndOccupySeat(long seatId) {
+    public ConcertInfo.SeatInfo findAndOccupySeat(long seatId) {
         ConcertSeatEntity seat = concertRepository.findOneBySeatIdWithLock(seatId);
         seat.checkOccupied();
         seat.occupy();
-        return SeatInfo.of(seat);
+        return ConcertInfo.SeatInfo.of(seat);
     }
 }

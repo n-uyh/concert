@@ -5,9 +5,8 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.when;
 
-import com.hhplus.concert.domain.concert.ConcertInfo.Common;
-import com.hhplus.concert.domain.concert.ConcertInfo.SeatInfo;
 import com.hhplus.concert.domain.concert.ConcertException.ConcertError;
+import com.hhplus.concert.domain.concert.ConcertInfo.SeatInfo;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.List;
@@ -37,14 +36,13 @@ class ConcertServiceTest {
         LocalDate concertDate = LocalDate.of(2024, 10, 2);
         LocalTime startTime = LocalTime.of(17, 0, 0);
 
-        when(concertRepository.findAllByConcertDateBetween(from, end)).thenReturn(
+        when(concertRepository.findAvailable(from, end)).thenReturn(
             List.of(
                 new ConcertEntity(1, "공연1", concertDate, startTime)
             )
         );
 
-        List<Common> results = concertService.findAllAvailableConcertBetweenFromAndTo(
-            from, end);
+        List<ConcertInfo.Common> results = concertService.findAvailable(new ConcertCommand.Available(from, end));
 
         assertEquals(1, results.size());
         assertTrue(concertDate.isAfter(from));
@@ -53,7 +51,7 @@ class ConcertServiceTest {
 
     @Test
     @DisplayName("좌석 조회 성공 테스트")
-    void findAllSeatsByConcertId() {
+    void findAvailableConcertSeats() {
         long concertId = 1;
         when(concertRepository.findAllSeatsByConcertId(concertId)).thenReturn(
             List.of(
@@ -64,7 +62,7 @@ class ConcertServiceTest {
             )
         );
 
-        List<SeatInfo> seats = concertService.findAllSeatsByConcertId(concertId);
+        List<ConcertInfo.SeatInfo> seats = concertService.findAvailableConcertSeats(new ConcertCommand.Seat(concertId));
 
         assertEquals(4, seats.size());
     }

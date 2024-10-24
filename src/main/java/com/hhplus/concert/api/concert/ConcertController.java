@@ -1,7 +1,7 @@
 package com.hhplus.concert.api.concert;
 
 import com.hhplus.concert.api.concert.ConcertResponse.ConcertList;
-import com.hhplus.concert.application.ConcertFacade;
+import com.hhplus.concert.domain.concert.ConcertService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -14,13 +14,13 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/concerts")
 public class ConcertController implements IConcertController {
 
-    private final ConcertFacade concertFacade;
+    private final ConcertService concertService;
 
     @GetMapping
     public ResponseEntity<ConcertResponse.ConcertList> availableConcerts(
         @ModelAttribute ConcertRequest.Available request
     ) {
-        ConcertList concerts = ConcertList.of(concertFacade.findAllAvailable(request.toCommand()));
+        ConcertList concerts = ConcertList.of(concertService.findAvailable(request.toCommand()));
         return ResponseEntity.ok(concerts);
     }
 
@@ -28,7 +28,7 @@ public class ConcertController implements IConcertController {
     public ResponseEntity<ConcertResponse.SeatList> availableSeats(
         @ModelAttribute ConcertRequest.Seat request
     ) {
-        ConcertResponse.SeatList seats = ConcertResponse.SeatList.of(concertFacade.findAllSeatsByConcertId(request.toCommand()));
+        ConcertResponse.SeatList seats = ConcertResponse.SeatList.of(concertService.findAvailableConcertSeats(request.toCommand()));
         return ResponseEntity.ok(seats);
     }
 
