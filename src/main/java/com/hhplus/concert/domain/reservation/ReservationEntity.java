@@ -32,7 +32,7 @@ public class ReservationEntity {
     private ReservationStatus status;
 
     private LocalDateTime createdAt;
-    private LocalDateTime expiresAt;
+    private LocalDateTime expiredAt;
 
     public static final long EXPIRES_AFTER_SECONDS = 5 * 60;
 
@@ -40,8 +40,8 @@ public class ReservationEntity {
         return new ReservationEntity(0, concertSeatId,userId,price,ReservationStatus.RESERVED,createdAt,createdAt.plusSeconds(EXPIRES_AFTER_SECONDS));
     }
 
-    public void updateExpired(LocalDateTime baseTime) {
-        if (expiresAt.isBefore(baseTime)) {
+    public void expire(LocalDateTime baseTime) {
+        if (expiredAt.isBefore(baseTime)) {
             this.status = ReservationStatus.CANCELED;
         }
     }

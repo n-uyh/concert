@@ -1,7 +1,7 @@
 package com.hhplus.concert.api.concert;
 
-import com.hhplus.concert.application.ConcertInfo;
-import com.hhplus.concert.application.ConcertInfo.SeatInfo;
+import com.hhplus.concert.domain.concert.ConcertInfo;
+import com.hhplus.concert.domain.concert.ConcertInfo.SeatInfo;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.List;
@@ -11,8 +11,8 @@ public class ConcertResponse {
     public record ConcertList(
         List<CommonConcert> results
     ) {
-        public static ConcertList from(List<ConcertInfo.Common> concert) {
-            return new ConcertList(concert.stream().map(CommonConcert::from).toList());
+        public static ConcertList of(List<ConcertInfo.Common> concert) {
+            return new ConcertList(concert.stream().map(CommonConcert::of).toList());
         }
     }
 
@@ -22,7 +22,7 @@ public class ConcertResponse {
         LocalDate concertDate,
         LocalTime startTime
     ) {
-        public static CommonConcert from(ConcertInfo.Common info) {
+        public static CommonConcert of(ConcertInfo.Common info) {
             return new CommonConcert(info.id(), info.title(), info.concertDate(), info.startTime());
         }
     }
@@ -30,7 +30,7 @@ public class ConcertResponse {
     public record SeatList(
         List<SeatResult> seats
     ) {
-        public static SeatList from(List<SeatInfo> infos) {
+        public static SeatList of(List<SeatInfo> infos) {
             return new SeatList(infos.stream().map(SeatResult::from).toList());
         }
 

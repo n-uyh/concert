@@ -13,11 +13,11 @@ public interface IWaitingController {
 
     @Operation(summary = "사용자 토큰 발급 기능", description = "사용자의 대기열토큰을 발급합니다.")
     @ApiResponse(responseCode = "200", description = "토큰반환")
-    ResponseEntity<CreatedResult> requestToken();
+    ResponseEntity<CreatedResult> issueToken();
 
     @Operation(summary = "사용자 토큰 조회 기능", description = "사용자의 대기열토큰을 상태 및 순번을 조회합니다.")
     @ApiResponse(responseCode = "200", description = "토큰반환")
-    public ResponseEntity<TokenResult> getTokenWithWaitingNo(
+    ResponseEntity<TokenResult> getToken(
         @RequestHeader("Hh-Waiting-Token") String token
     );
 

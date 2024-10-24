@@ -1,6 +1,6 @@
 package com.hhplus.concert.api.payment;
 
-import com.hhplus.concert.application.PaymentCommand;
+import com.hhplus.concert.domain.payment.PaymentCommand;
 import io.swagger.v3.oas.annotations.media.Schema;
 
 public class PaymentRequest {

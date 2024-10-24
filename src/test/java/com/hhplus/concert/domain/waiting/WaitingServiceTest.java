@@ -7,7 +7,7 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import com.hhplus.concert.domain.waiting.WaitingException.WaitingError;
-import com.hhplus.concert.domain.waiting.WaitingInfo.CreatedInfo;
+import com.hhplus.concert.domain.waiting.WaitingInfo.Created;
 import com.hhplus.concert.domain.waiting.WaitingInfo.TokenInfo;
 import java.time.LocalDateTime;
 import java.util.List;
@@ -31,8 +31,8 @@ class WaitingServiceTest {
 
     @Test
     @DisplayName("대기열토큰을 발급시 토큰의 상태는 WAIT이다.")
-    void createTokenThenStatusWait() {
-        CreatedInfo token = waitingService.createToken();
+    void issueThenStatusWait() {
+        Created token = waitingService.issue();
         assertEquals(WaitingStatus.WAIT.name(), token.status());
     }
 
@@ -43,7 +43,7 @@ class WaitingServiceTest {
         when(waitingRepository.findOneByToken(token)).thenReturn(Optional.empty());
 
         WaitingException exception = assertThrows(WaitingException.class,
-            () -> waitingService.getTokenWithWaitingNo(token));
+            () -> waitingService.getToken(token));
 
         assertEquals(WaitingError.TOKEN_NOT_FOUND, exception.getErrorCode());
     }
@@ -59,7 +59,7 @@ class WaitingServiceTest {
         );
 
         WaitingException exception = assertThrows(WaitingException.class,
-            () -> waitingService.getTokenWithWaitingNo(token));
+            () -> waitingService.getToken(token));
 
         assertEquals(WaitingError.EXPIRED_TOKEN, exception.getErrorCode());
     }
@@ -75,7 +75,7 @@ class WaitingServiceTest {
             Optional.of(new WaitingEntity(1, token, active, someDateTime, someDateTime))
         );
 
-        TokenInfo result = waitingService.getTokenWithWaitingNo(token);
+        TokenInfo result = waitingService.getToken(token);
         assertEquals(token, result.token());
         assertEquals(active.name(), result.status());
         assertEquals(0, result.waitingNo());
@@ -101,7 +101,7 @@ class WaitingServiceTest {
             )
         );
 
-        TokenInfo result = waitingService.getTokenWithWaitingNo(token);
+        TokenInfo result = waitingService.getToken(token);
         assertEquals(token, result.token());
         assertEquals(status.name(), result.status());
         assertEquals(1, result.waitingNo());
@@ -162,5 +162,40 @@ class WaitingServiceTest {
         waitingService.expireToken(token);
 
         assertEquals(WaitingStatus.EXPIRED, entity.getStatus());
+    }
+
+    @Test
+    @DisplayName("대기열 토큰 스케줄러 실행 중 활성화 대상 토큰이 없는 경우 ACTIVATE_TARGET_NOT_FOUND 에러가 발생한다.")
+    void tokenActivateSchedulerAndActivateTargetNotFound() {
+        WaitingStatus status = WaitingStatus.WAIT;
+        int personnel = WaitingEntity.ACTIVATE_PERSONNEL;
+        when(waitingRepository.findActivateTargets(status, personnel)).thenReturn(
+            List.of()
+        );
+
+        WaitingException exception = assertThrows(WaitingException.class,
+            () -> waitingService.activate());
+
+        assertEquals(WaitingError.ACTIVATE_TARGET_NOT_FOUND, exception.getErrorCode());
+    }
+
+    @Test
+    @DisplayName("대기열 토큰 스케줄러 실행 중 활성화 대상 토큰을 잘 조회해온다면 대상 토큰의 상태가 WAIT 에서 ACTIVE로 업데이트 된다.")
+    void tokenActivateSchedulerThenTargetsStatusChangedToActive() {
+        WaitingStatus status = WaitingStatus.WAIT;
+        int personnel = WaitingEntity.ACTIVATE_PERSONNEL;
+        LocalDateTime createdAt = LocalDateTime.of(2024, 10, 10, 12, 0, 0);
+
+        List<WaitingEntity> targets = List.of(
+            new WaitingEntity(1, "token1", status, createdAt, createdAt),
+            new WaitingEntity(2, "token2", status, createdAt, createdAt),
+            new WaitingEntity(3, "token3", status, createdAt, createdAt)
+        );
+
+        when(waitingRepository.findActivateTargets(status, personnel)).thenReturn(targets);
+
+        waitingService.activate();
+
+        assertEquals(WaitingStatus.ACTIVE, targets.get(0).getStatus());
     }
 }

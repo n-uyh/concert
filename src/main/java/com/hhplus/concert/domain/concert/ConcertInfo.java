@@ -1,7 +1,5 @@
-package com.hhplus.concert.application;
+package com.hhplus.concert.domain.concert;
 
-import com.hhplus.concert.domain.concert.ConcertEntity;
-import com.hhplus.concert.domain.concert.ConcertSeatEntity;
 import java.time.LocalDate;
 import java.time.LocalTime;
 
@@ -14,7 +12,7 @@ public class ConcertInfo {
         LocalTime startTime
     ) {
 
-        public static Common from(ConcertEntity entity) {
+        public static Common of(ConcertEntity entity) {
             return new ConcertInfo.Common(entity.getId(), entity.getTitle(), entity.getConcertDate(), entity.getStartTime());
         }
     }
@@ -26,7 +24,7 @@ public class ConcertInfo {
         boolean occupied
     ) {
 
-        public static SeatInfo from(ConcertSeatEntity entity) {
+        public static SeatInfo of(ConcertSeatEntity entity) {
             return new SeatInfo(entity.getId(), entity.getSeatNo(), entity.getPrice(), entity.isOccupied());
         }
     }

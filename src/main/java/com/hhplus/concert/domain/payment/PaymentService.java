@@ -1,8 +1,7 @@
 package com.hhplus.concert.domain.payment;
 
-import com.hhplus.concert.application.PaymentInfo.CommonPayInfo;
-import com.hhplus.concert.application.ReservationInfo.ReservedInfo;
 import com.hhplus.concert.domain.payment.PaymentException.PayError;
+import com.hhplus.concert.domain.reservation.ReservationInfo.ReservedInfo;
 import java.time.LocalDateTime;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -15,7 +14,7 @@ public class PaymentService {
     private final PaymentRepository paymentRepository;
 
     @Transactional
-    public CommonPayInfo createPayment(ReservedInfo info) {
+    public PaymentInfo.Common createPayment(ReservedInfo info) {
         if (!info.canPay()) {
             throw new PaymentException(PayError.CANNOT_PAY);
         }
@@ -30,7 +29,7 @@ public class PaymentService {
 
         paymentRepository.insertHistory(history);
 
-        return CommonPayInfo.from(payment);
+        return PaymentInfo.Common.of(payment);
     }
 
 }

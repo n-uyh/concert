@@ -1,6 +1,6 @@
 package com.hhplus.concert.api.reservation;
 
-import com.hhplus.concert.application.ReservationInfo.ReservedInfo;
+import com.hhplus.concert.domain.reservation.ReservationInfo.ReservedInfo;
 import java.time.LocalDateTime;
 
 public class ReservationResponse {
@@ -12,7 +12,7 @@ public class ReservationResponse {
         String status,
         LocalDateTime reservedAt
     ) {
-        public static Reserved from(ReservedInfo info) {
+        public static Reserved of(ReservedInfo info) {
             return new Reserved(info.id(), info.seatId(), info.price(), info.status(), info.reservedAt());
         }
     }

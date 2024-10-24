@@ -19,17 +19,17 @@ public class WaitingController implements IWaitingController {
     private final WaitingService waitingService;
 
     @PostMapping
-    public ResponseEntity<CreatedResult> requestToken(
+    public ResponseEntity<CreatedResult> issueToken(
     ) {
-        CreatedResult response = CreatedResult.from(waitingService.createToken());
+        CreatedResult response = CreatedResult.of(waitingService.issue());
         return ResponseEntity.ok(response);
     }
 
     @PatchMapping
-    public ResponseEntity<TokenResult> getTokenWithWaitingNo(
+    public ResponseEntity<TokenResult> getToken(
         @RequestHeader("Hh-Waiting-Token") String token
     ) {
-        TokenResult response = TokenResult.from(waitingService.getTokenWithWaitingNo(token));
+        TokenResult response = TokenResult.of(waitingService.getToken(token));
         return ResponseEntity.ok(response);
     }
 

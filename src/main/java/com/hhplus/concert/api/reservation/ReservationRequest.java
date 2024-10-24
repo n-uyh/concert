@@ -1,6 +1,6 @@
 package com.hhplus.concert.api.reservation;
 
-import com.hhplus.concert.application.ReservationCommand;
+import com.hhplus.concert.domain.reservation.ReservationCommand;
 import io.swagger.v3.oas.annotations.media.Schema;
 
 public class ReservationRequest {
@@ -11,8 +11,8 @@ public class ReservationRequest {
         @Schema(description = "사용자id")
         long userId
     ) {
-        public ReservationCommand.ReserveSeat toCommand(String token) {
-            return new ReservationCommand.ReserveSeat(token, seatId, userId);
+        public ReservationCommand.ReserveSeat toCommand() {
+            return new ReservationCommand.ReserveSeat(seatId, userId);
         }
     }
 }

@@ -1,6 +1,6 @@
 package com.hhplus.concert.api.concert;
 
-import com.hhplus.concert.application.ConcertCommand;
+import com.hhplus.concert.domain.concert.ConcertCommand;
 import io.swagger.v3.oas.annotations.media.Schema;
 import java.time.LocalDate;
 import org.springframework.format.annotation.DateTimeFormat;
@@ -15,8 +15,17 @@ public class ConcertRequest {
         LocalDate end
     ) {
 
-        public ConcertCommand.Available toCommand(String token) {
-            return new ConcertCommand.Available(token, from, end);
+        public ConcertCommand.Available toCommand() {
+            return new ConcertCommand.Available(from, end);
+        }
+    }
+
+    public record Seat(
+        @Schema(description = "공연id")
+        long concertId
+    ) {
+        public ConcertCommand.Seat toCommand() {
+            return new ConcertCommand.Seat(concertId);
         }
     }
 

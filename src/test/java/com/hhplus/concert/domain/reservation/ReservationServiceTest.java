@@ -1,15 +1,18 @@
 package com.hhplus.concert.domain.reservation;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-import com.hhplus.concert.application.ConcertInfo.SeatInfo;
-import com.hhplus.concert.application.ReservationInfo.ReservedInfo;
+import com.hhplus.concert.domain.concert.ConcertInfo.SeatInfo;
+import com.hhplus.concert.domain.reservation.ReservationException.ReserveError;
+import com.hhplus.concert.domain.reservation.ReservationInfo.ReservedInfo;
 import java.time.Duration;
 import java.time.LocalDateTime;
+import java.util.List;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -57,5 +60,39 @@ class ReservationServiceTest {
             reservationId);
 
         assertEquals(ReservationStatus.CANCELED.name(),info.status());
+    }
+
+    @Test
+    @DisplayName("예약만료 시 만료 대상 예약건들이 없는 경우, EXPIRE_TARGETS_NOT_FOUND 에러가 발생한다.")
+    void expireReservationButTargetsNotFound() {
+        ReservationStatus status = ReservationStatus.RESERVED;
+        LocalDateTime baseTime = LocalDateTime.of(2024,10,10,15,0,2);
+
+        when(reservationRepository.findExpireTargets(status, baseTime)).thenReturn(List.of());
+
+        ReservationException exception = assertThrows(ReservationException.class,
+            () -> reservationService.expire(baseTime));
+
+        assertEquals(ReserveError.EXPIRE_TARGETS_NOT_FOUND, exception.getErrorCode());
+    }
+
+    @Test
+    @DisplayName("예약만료대상을 성공적으로 만료시키는 경우, 만료 대상 예약 건들의 상태가 RESERVED -> CANCEL로 업데이트 된다.")
+    void expireReservationSuccessThenReservationStatusWillBeCancel() {
+        ReservationStatus status = ReservationStatus.RESERVED;
+        LocalDateTime createdAt = LocalDateTime.of(2024, 10, 10, 14, 55, 0);
+        LocalDateTime baseTime = LocalDateTime.of(2024,10,10,15,0,2);
+
+        List<ReservationEntity> targets = List.of(
+            new ReservationEntity(1, 1, 1, 100_000, status, createdAt, createdAt.plusMinutes(5)),
+            new ReservationEntity(2, 2, 2, 100_000, status, createdAt, createdAt.plusMinutes(5)),
+            new ReservationEntity(3, 3, 3, 100_000, status, createdAt, createdAt.plusMinutes(5))
+        );
+        when(reservationRepository.findExpireTargets(status, baseTime)).thenReturn(targets);
+
+        List<Long> seatIds = reservationService.expire(baseTime);
+
+        assertEquals(3, seatIds.size());
+        assertEquals(ReservationStatus.CANCELED, targets.get(0).getStatus());
     }
 }

@@ -1,16 +1,11 @@
 package com.hhplus.concert.api.concert;
 
-import com.hhplus.concert.api.concert.ConcertRequest.Available;
 import com.hhplus.concert.api.concert.ConcertResponse.ConcertList;
-import com.hhplus.concert.api.concert.ConcertResponse.SeatList;
-import com.hhplus.concert.application.ConcertFacade;
-import java.util.List;
+import com.hhplus.concert.domain.concert.ConcertService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -19,23 +14,21 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/concerts")
 public class ConcertController implements IConcertController {
 
-    private final ConcertFacade concertFacade;
+    private final ConcertService concertService;
 
     @GetMapping
-    public ResponseEntity<ConcertList> availableConcerts(
-        @RequestHeader("Hh-Waiting-Token") String token,
-        @ModelAttribute Available request
+    public ResponseEntity<ConcertResponse.ConcertList> availableConcerts(
+        @ModelAttribute ConcertRequest.Available request
     ) {
-        ConcertList concerts = ConcertList.from(concertFacade.findAllAvailable(request.toCommand(token)));
+        ConcertList concerts = ConcertList.of(concertService.findAvailable(request.toCommand()));
         return ResponseEntity.ok(concerts);
     }
 
     @GetMapping("/{concertId}")
-    public ResponseEntity<SeatList> availableSeats(
-        @RequestHeader("Hh-Waiting-Token") String token,
-        @PathVariable long concertId
+    public ResponseEntity<ConcertResponse.SeatList> availableSeats(
+        @ModelAttribute ConcertRequest.Seat request
     ) {
-        SeatList seats = SeatList.from(concertFacade.findAllSeatsByConcertId(token, concertId));
+        ConcertResponse.SeatList seats = ConcertResponse.SeatList.of(concertService.findAvailableConcertSeats(request.toCommand()));
         return ResponseEntity.ok(seats);
     }
 

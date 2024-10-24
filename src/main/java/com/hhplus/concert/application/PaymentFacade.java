@@ -1,9 +1,11 @@
 package com.hhplus.concert.application;
 
-import com.hhplus.concert.application.PaymentInfo.CommonPayInfo;
-import com.hhplus.concert.application.PaymentInfo.PayedInfo;
-import com.hhplus.concert.application.ReservationInfo.ReservedInfo;
+import com.hhplus.concert.domain.payment.PaymentCommand;
+import com.hhplus.concert.domain.payment.PaymentInfo;
 import com.hhplus.concert.domain.payment.PaymentService;
+import com.hhplus.concert.domain.point.PointCommand;
+import com.hhplus.concert.domain.point.PointService;
+import com.hhplus.concert.domain.reservation.ReservationInfo;
 import com.hhplus.concert.domain.reservation.ReservationService;
 import com.hhplus.concert.domain.waiting.WaitingService;
 import lombok.RequiredArgsConstructor;
@@ -16,17 +18,18 @@ public class PaymentFacade {
     private final WaitingService waitingService;
     private final ReservationService reservationService;
     private final PaymentService paymentService;
+    private final PointService pointService;
 
-    public PayedInfo createPayment(PaymentCommand.CreatePayment command) {
-        waitingService.checkTokenIsActive(command.token());
-
-        ReservedInfo reserved = reservationService.findReservationWithStatusUpdate(
+    public PaymentInfo.PayedInfo createPayment(PaymentCommand.CreatePayment command) {
+        ReservationInfo.ReservedInfo reserved = reservationService.findReservationWithStatusUpdate(
             command.reservationId());
 
-        CommonPayInfo payment = paymentService.createPayment(reserved);
+        PaymentInfo.Common payment = paymentService.createPayment(reserved);
+
+        pointService.pay(new PointCommand.Pay(payment.userId(), payment.price()));
 
         waitingService.expireToken(command.token());
-        return new PayedInfo(reserved, payment);
+        return new PaymentInfo.PayedInfo(reserved, payment);
     }
 
 }

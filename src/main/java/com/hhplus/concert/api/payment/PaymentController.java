@@ -22,7 +22,7 @@ public class PaymentController implements IPaymentController {
         @RequestHeader("Hh-Waiting-Token") String token,
         @RequestBody PaymentRequest.CreatePayment reqeust
     ) {
-        Payed result = Payed.from(paymentFacade.createPayment(reqeust.toCommand(token)));
+        Payed result = Payed.of(paymentFacade.createPayment(reqeust.toCommand(token)));
         return ResponseEntity.ok(result);
     }
 }

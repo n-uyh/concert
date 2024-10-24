@@ -38,6 +38,8 @@ public class WaitingEntity {
         return new WaitingEntity(0,UUID.randomUUID().toString(),WaitingStatus.WAIT,createdAt,createdAt);
     }
 
+    public static final int ACTIVATE_PERSONNEL = 3;
+
     public String status() {
         return status.name();
     }
@@ -55,5 +57,12 @@ public class WaitingEntity {
     public void expire() {
         this.status = WaitingStatus.EXPIRED;
         this.updatedAt = LocalDateTime.now();
+    }
+
+    public void activate() {
+        if (status == WaitingStatus.WAIT) {
+            this.status = WaitingStatus.ACTIVE;
+            this.updatedAt = LocalDateTime.now();
+        }
     }
 }
