@@ -6,6 +6,7 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
+import jakarta.persistence.Version;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -23,6 +24,9 @@ public class PointEntity {
     private long userId;
     private long point;
 
+    @Version
+    private long version;
+
     public void charge(long amount) {
         this.point += amount;
     }
@@ -32,5 +36,12 @@ public class PointEntity {
             throw new PointException(PointError.INSUFFICIENT_POINT_ERROR);
         }
         this.point -= price;
+    }
+
+    public PointEntity(long id, long userId, long point) {
+        this.id = id;
+        this.userId = userId;
+        this.point = point;
+        this.version = 1;
     }
 }
