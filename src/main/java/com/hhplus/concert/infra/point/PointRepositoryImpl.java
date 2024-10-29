@@ -28,4 +28,9 @@ public class PointRepositoryImpl implements PointRepository {
     public PointEntity findUserPointWithLock(long userId) {
         return pointJpaRepository.findOneWithLockByUserId(userId);
     }
+
+    @Override
+    public PointEntity findUserPointWithOptLock(long userId) {
+        return pointJpaRepository.findOneWithOptLockByUserId(userId);
+    }
 }

@@ -14,9 +14,10 @@ public class PointService {
 
     @Transactional
     public PointInfo.Common chargePoint(PointCommand.Charge command) {
-        PointEntity point = pointRepository.findUserPoint(command.userId()).orElseThrow(
-            () -> new PointException(PointError.USER_POINT_NOT_FOUND));
-
+        PointEntity point = pointRepository.findUserPointWithOptLock(command.userId());
+        if (point == null) {
+            throw new PointException(PointError.USER_POINT_NOT_FOUND);
+        }
         point.charge(command.amount());
 
         PointHistoryEntity history = new PointHistoryEntity(0, point.getId(), command.amount(),
