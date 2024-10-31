@@ -1,4 +1,4 @@
-package com.hhplus.concert.infra.waiting;
+package com.hhplus.concert.infra.db.waiting;
 
 import com.hhplus.concert.domain.waiting.WaitingEntity;
 import com.hhplus.concert.domain.waiting.WaitingRepository;

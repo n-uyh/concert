@@ -3,7 +3,7 @@ package com.hhplus.concert.domain.point;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import com.hhplus.concert.domain.point.PointException.PointError;
-import com.hhplus.concert.infra.point.PointJpaRepository;
+import com.hhplus.concert.infra.db.point.PointJpaRepository;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;

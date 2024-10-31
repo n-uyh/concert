@@ -1,4 +1,4 @@
-package com.hhplus.concert.infra.concert;
+package com.hhplus.concert.infra.db.concert;
 
 import com.hhplus.concert.domain.concert.ConcertEntity;
 import java.time.LocalDate;
