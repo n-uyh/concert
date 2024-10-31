@@ -1,4 +1,4 @@
-package com.hhplus.concert.infra.concert;
+package com.hhplus.concert.infra.db.concert;
 
 import com.hhplus.concert.domain.concert.ConcertEntity;
 import com.hhplus.concert.domain.concert.ConcertRepository;
@@ -33,5 +33,10 @@ public class ConcertRepositoryImpl implements ConcertRepository {
     @Override
     public List<ConcertSeatEntity> findReleaseTargetSeats(List<Long> seatIds) {
         return concertSeatsJpaRepository.findAllById(seatIds);
+    }
+
+    @Override
+    public ConcertSeatEntity findSeat(long seatId) {
+        return concertSeatsJpaRepository.findById(seatId).get();
     }
 }

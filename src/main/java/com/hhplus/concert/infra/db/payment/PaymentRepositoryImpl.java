@@ -1,4 +1,4 @@
-package com.hhplus.concert.infra.payment;
+package com.hhplus.concert.infra.db.payment;
 
 import com.hhplus.concert.domain.payment.PaymentEntity;
 import com.hhplus.concert.domain.payment.PaymentHistoryEntity;

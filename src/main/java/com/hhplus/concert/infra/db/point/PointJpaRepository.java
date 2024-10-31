@@ -1,4 +1,4 @@
-package com.hhplus.concert.infra.point;
+package com.hhplus.concert.infra.db.point;
 
 import com.hhplus.concert.domain.point.PointEntity;
 import jakarta.persistence.LockModeType;
@@ -12,4 +12,7 @@ public interface PointJpaRepository extends JpaRepository<PointEntity, Long> {
 
     @Lock(LockModeType.PESSIMISTIC_WRITE)
     PointEntity findOneWithLockByUserId(long userId);
+
+    @Lock(LockModeType.OPTIMISTIC)
+    PointEntity findOneWithOptLockByUserId(long userId);
 }

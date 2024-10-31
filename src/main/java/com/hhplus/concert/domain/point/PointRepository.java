@@ -6,4 +6,5 @@ public interface PointRepository {
     Optional<PointEntity> findUserPoint(long userId);
     void insertPointHistory(PointHistoryEntity entity);
     PointEntity findUserPointWithLock(long userId);
+    PointEntity findUserPointWithOptLock(long userId);
 }

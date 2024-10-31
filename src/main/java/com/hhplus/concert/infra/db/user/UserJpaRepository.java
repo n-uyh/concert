@@ -1,4 +1,4 @@
-package com.hhplus.concert.infra.user;
+package com.hhplus.concert.infra.db.user;
 
 import com.hhplus.concert.domain.user.UserEntity;
 import org.springframework.data.jpa.repository.JpaRepository;

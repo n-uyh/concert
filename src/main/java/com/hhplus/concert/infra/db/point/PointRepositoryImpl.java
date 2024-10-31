@@ -1,4 +1,4 @@
-package com.hhplus.concert.infra.point;
+package com.hhplus.concert.infra.db.point;
 
 import com.hhplus.concert.domain.point.PointEntity;
 import com.hhplus.concert.domain.point.PointHistoryEntity;
@@ -27,5 +27,10 @@ public class PointRepositoryImpl implements PointRepository {
     @Override
     public PointEntity findUserPointWithLock(long userId) {
         return pointJpaRepository.findOneWithLockByUserId(userId);
+    }
+
+    @Override
+    public PointEntity findUserPointWithOptLock(long userId) {
+        return pointJpaRepository.findOneWithOptLockByUserId(userId);
     }
 }

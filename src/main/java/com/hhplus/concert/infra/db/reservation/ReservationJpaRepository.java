@@ -1,4 +1,4 @@
-package com.hhplus.concert.infra.reservation;
+package com.hhplus.concert.infra.db.reservation;
 
 import com.hhplus.concert.domain.reservation.ReservationEntity;
 import com.hhplus.concert.domain.reservation.ReservationStatus;
