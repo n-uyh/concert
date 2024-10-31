@@ -1,4 +1,4 @@
-package com.hhplus.concert.infra.payment;
+package com.hhplus.concert.infra.db.payment;
 
 import com.hhplus.concert.domain.payment.PaymentHistoryEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
