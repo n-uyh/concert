@@ -28,7 +28,7 @@ class PointServiceTest {
     void userPointChargeSuccess() {
         long userId = 1;
         long amount = 20_000;
-        when(pointRepository.findUserPointWithLock(userId)).thenReturn(
+        when(pointRepository.findUserPointWithOptLock(userId)).thenReturn(
             new PointEntity(1, userId, 100_000)
         );
 

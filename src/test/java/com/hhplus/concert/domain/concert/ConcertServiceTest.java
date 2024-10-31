@@ -73,7 +73,7 @@ class ConcertServiceTest {
     void findSeatButAlreadyOccupied() {
         long seatId = 1;
         boolean occupied = true;
-        when(concertRepository.findOneBySeatIdWithLock(seatId)).thenReturn(
+        when(concertRepository.findSeat(seatId)).thenReturn(
             new ConcertSeatEntity(seatId, 1, 1,100_000, occupied)
         );
 
@@ -88,7 +88,7 @@ class ConcertServiceTest {
     void occupySeatSuccess() {
         long seatId = 1;
         boolean occupied = false;
-        when(concertRepository.findOneBySeatIdWithLock(seatId)).thenReturn(
+        when(concertRepository.findSeat(seatId)).thenReturn(
             new ConcertSeatEntity(seatId, 1, 1,100_000, occupied)
         );
 
