@@ -25,7 +25,10 @@ public class ConcertService {
 
     @Transactional
     public ConcertInfo.SeatInfo occupySeat(long seatId) {
-        ConcertSeatEntity seat = concertRepository.findOneBySeatIdWithLock(seatId);
+        ConcertSeatEntity seat = concertRepository.findSeat(seatId);
+        if (seat == null) {
+            throw new ConcertException(ConcertError.SEAT_NOT_FOUND);
+        }
         seat.checkOccupied();
         seat.occupy();
         return ConcertInfo.SeatInfo.of(seat);
