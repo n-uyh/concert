@@ -19,6 +19,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.dao.OptimisticLockingFailureException;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -63,8 +64,11 @@ class ReservationFacadeConcurrencyTest {
                     if (e.getErrorCode() == ConcertError.SEAT_ALREADY_OCCUPIED) {
                         errorCount.getAndAdd(1);
                     }
+                } catch (OptimisticLockingFailureException e) {
+                    errorCount.getAndAdd(1);
                 } catch (Exception e) {
-                } finally {
+                    log.error(e.getMessage());
+                } finally{
                     latch.countDown();
                 }
             });
@@ -78,7 +82,7 @@ class ReservationFacadeConcurrencyTest {
 
         // 소요시간
         long duration = endTime - startTime;
-        log.info("좌석예약 비관적락 소요시간({}명) : {}ms",count,duration);
+        log.info("좌석예약 낙관적락 소요시간({}명) : {}ms",count,duration);
     }
 
 }

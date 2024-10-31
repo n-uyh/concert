@@ -27,7 +27,7 @@ public class ConcertRepositoryImpl implements ConcertRepository {
 
     @Override
     public ConcertSeatEntity findOneBySeatIdWithLock(long seatId) {
-        return concertSeatsJpaRepository.findOneByIdWithLock(seatId);
+        return concertSeatsJpaRepository.findOneWithOptLockById(seatId);
     }
 
     @Override

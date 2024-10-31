@@ -6,6 +6,7 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
+import jakarta.persistence.Version;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -28,6 +29,9 @@ public class ConcertSeatEntity {
     private long price;
     private boolean occupied;
 
+    @Version
+    private long version;
+
     public void occupy() {
         this.occupied = true;
     }
@@ -40,5 +44,14 @@ public class ConcertSeatEntity {
 
     public void releaseOccupancy() {
         this.occupied = false;
+    }
+
+    public ConcertSeatEntity(long id, long concertId, int seatNo, long price, boolean occupied) {
+        this.id = id;
+        this.concertId = concertId;
+        this.seatNo = seatNo;
+        this.price = price;
+        this.occupied = occupied;
+        this.version = 1;
     }
 }
