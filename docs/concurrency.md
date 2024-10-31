@@ -69,11 +69,11 @@
 
 2. 락 성능 비교(처리 소요시간 기준)
     - **비관적락** - 40명: 5ms / 100명: 12ms / 1,000명: 383ms / 4,000명 10번 평균: 1,446.6ms
-   ![pessimistic.png](pessimistic.png)
+   ![pessi_lock.png](pessi_lock.png)
    - **낙관적락** - 40명: 4ms / 100명: 11ms / 1,000명: 317ms / 4,000명 10번 평균: 1,552.1ms  
-   ![optimistic.png](optimistic.png)
+   ![opt_lock.png](opt_lock.png)
    - Redis : Simple Lock - 40명: 3ms / 100명: 16ms / 1,000명: 89ms / 4,000명 10번 평균: 1,140.7ms
-   ![simplelock.png](simplelock.png)
+   ![simple_lock.png](simple_lock.png)
    - Redis : Spin Lock, Pub/Sub 방식은 이 시나리오에서는 재시도가 필요하지 않다고 생각하여 테스트하지 않았습니다.
 
 
