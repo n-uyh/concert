@@ -29,9 +29,6 @@ public class ConcertSeatEntity {
     private long price;
     private boolean occupied;
 
-    @Version
-    private long version;
-
     public void occupy() {
         this.occupied = true;
     }
@@ -44,14 +41,5 @@ public class ConcertSeatEntity {
 
     public void releaseOccupancy() {
         this.occupied = false;
-    }
-
-    public ConcertSeatEntity(long id, long concertId, int seatNo, long price, boolean occupied) {
-        this.id = id;
-        this.concertId = concertId;
-        this.seatNo = seatNo;
-        this.price = price;
-        this.occupied = occupied;
-        this.version = 1;
     }
 }

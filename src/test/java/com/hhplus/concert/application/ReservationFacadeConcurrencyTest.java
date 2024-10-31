@@ -64,8 +64,6 @@ class ReservationFacadeConcurrencyTest {
                     if (e.getErrorCode() == ConcertError.SEAT_ALREADY_OCCUPIED) {
                         errorCount.getAndAdd(1);
                     }
-                } catch (OptimisticLockingFailureException e) {
-                    errorCount.getAndAdd(1);
                 } catch (Exception e) {
                     log.error(e.getMessage());
                 } finally{
@@ -82,7 +80,7 @@ class ReservationFacadeConcurrencyTest {
 
         // 소요시간
         long duration = endTime - startTime;
-        log.info("좌석예약 낙관적락 소요시간({}명) : {}ms",count,duration);
+        log.info("좌석예약 심플락 소요시간({}명) : {}ms",count,duration);
     }
 
 }
