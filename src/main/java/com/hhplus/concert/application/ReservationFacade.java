@@ -5,7 +5,7 @@ import com.hhplus.concert.domain.concert.ConcertService;
 import com.hhplus.concert.domain.reservation.ReservationCommand;
 import com.hhplus.concert.domain.reservation.ReservationInfo;
 import com.hhplus.concert.domain.reservation.ReservationService;
-import com.hhplus.concert.infra.redis.DistributedLock;
+import com.hhplus.concert.domain.support.lock.DistributedLock;
 import java.time.LocalDateTime;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
@@ -20,7 +20,7 @@ public class ReservationFacade {
     private final ConcertService concertService;
     private final ReservationService reservationService;
 
-    @DistributedLock(key = "#command.seatId()", waitTime = 0)
+    @DistributedLock(key = "lock:#command.seatId()", waitTime = 0)
     @Transactional
     public ReservationInfo.ReservedInfo reserveSeat(ReservationCommand.ReserveSeat command) {
         long seatId = command.seatId();

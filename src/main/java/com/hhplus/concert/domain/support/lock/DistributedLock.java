@@ -1,4 +1,4 @@
-package com.hhplus.concert.infra.redis;
+package com.hhplus.concert.domain.support.lock;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;

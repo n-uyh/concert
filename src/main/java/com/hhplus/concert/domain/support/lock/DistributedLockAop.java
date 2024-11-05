@@ -1,4 +1,4 @@
-package com.hhplus.concert.infra.redis;
+package com.hhplus.concert.domain.support.lock;
 
 import com.hhplus.concert.support.AopForTransaction;
 import java.lang.reflect.Method;
@@ -16,16 +16,16 @@ import org.springframework.stereotype.Component;
 @RequiredArgsConstructor
 public class DistributedLockAop {
 
-    private final RedissonRepository redissonRepository;
+    private final LockRepository lockRepository;
     private final AopForTransaction aopForTransaction;
 
-    @Around("@annotation(com.hhplus.concert.infra.redis.DistributedLock)")
+    @Around("@annotation(com.hhplus.concert.domain.support.lock.DistributedLock)")
     public Object lock(final ProceedingJoinPoint joinPoint) throws Throwable {
         MethodSignature signature = (MethodSignature) joinPoint.getSignature();
         Method method = signature.getMethod();
         DistributedLock distributedLock = method.getAnnotation(DistributedLock.class);
 
-        try (AutoCloseableRLock lock = redissonRepository.lock(distributedLock)) {
+        try (AutoCloseableRLock lock = lockRepository.lock(distributedLock)) {
             if (!lock.isLocked()) throw new AlreadyLockedException("key already locked");
             return aopForTransaction.proceed(joinPoint);
         } catch (InterruptedException e) {

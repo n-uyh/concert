@@ -1,4 +1,4 @@
-package com.hhplus.concert.infra.redis;
+package com.hhplus.concert.domain.support.lock;
 
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;

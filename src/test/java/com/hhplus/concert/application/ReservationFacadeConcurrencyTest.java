@@ -7,7 +7,7 @@ import com.hhplus.concert.domain.concert.ConcertException.ConcertError;
 import com.hhplus.concert.domain.concert.ConcertSeatEntity;
 import com.hhplus.concert.domain.reservation.ReservationCommand;
 import com.hhplus.concert.infra.db.concert.ConcertSeatsJpaRepository;
-import com.hhplus.concert.infra.redis.AlreadyLockedException;
+import com.hhplus.concert.domain.support.lock.AlreadyLockedException;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;

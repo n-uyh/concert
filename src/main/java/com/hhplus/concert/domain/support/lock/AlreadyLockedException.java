@@ -1,4 +1,4 @@
-package com.hhplus.concert.infra.redis;
+package com.hhplus.concert.domain.support.lock;
 
 public class AlreadyLockedException extends RuntimeException {
 
