@@ -1,11 +1,11 @@
 package com.hhplus.concert.api.waiting;
 
-import com.hhplus.concert.api.waiting.WaitingResponse.TokenResult;
 import com.hhplus.concert.api.waiting.WaitingResponse.CreatedResult;
+import com.hhplus.concert.api.waiting.WaitingResponse.TokenResult;
 import com.hhplus.concert.domain.waiting.WaitingService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PatchMapping;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -25,7 +25,7 @@ public class WaitingController implements IWaitingController {
         return ResponseEntity.ok(response);
     }
 
-    @PatchMapping
+    @GetMapping
     public ResponseEntity<TokenResult> getToken(
         @RequestHeader("Hh-Waiting-Token") String token
     ) {

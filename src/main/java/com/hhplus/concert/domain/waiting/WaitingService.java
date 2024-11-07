@@ -1,7 +1,7 @@
 package com.hhplus.concert.domain.waiting;
 
 import com.hhplus.concert.domain.waiting.WaitingException.WaitingError;
-import com.hhplus.concert.domain.waiting.WaitingInfo.TokenInfo;
+import com.hhplus.concert.infra.redis.waiting.WaitingParam;
 import java.time.LocalDateTime;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
@@ -15,52 +15,45 @@ public class WaitingService {
 
     private final WaitingRepository waitingRepository;
 
-    @Transactional
     public WaitingInfo.Created issue() {
-        WaitingEntity waiting = WaitingEntity.create(LocalDateTime.now());
-        waitingRepository.save(waiting);
-        return new WaitingInfo.Created(waiting);
+        WaitingToken token = WaitingToken.issue(LocalDateTime.now());
+        waitingRepository.issue(WaitingParam.Issue.of(token));
+        return WaitingInfo.Created.of(token);
     }
 
-    @Transactional(readOnly = true)
     public WaitingInfo.TokenInfo getToken(String token) {
-        WaitingEntity waiting = waitingRepository.findOneByToken(token).orElseThrow(
-            () -> new WaitingException(WaitingError.TOKEN_NOT_FOUND));
+        WaitingParam.Search param = new WaitingParam.Search(token);
+        WaitingInfo.TokenInfo result = waitingRepository.findWaitToken(param);
 
-        waiting.checkExpired();
+        if (result == null) {
+            result = waitingRepository.findActiveToken(param);
 
-        if (waiting.isActive()) {
-            return new TokenInfo(waiting,0);
+            if (result == null) {
+                throw new WaitingException(WaitingError.TOKEN_NOT_FOUND);
+            }
         }
 
-        List<WaitingEntity> waitings = waitingRepository.findAllStatusWaiting();
-
-        int waitingNo = waitings.indexOf(waiting) + 1;
-        return new TokenInfo(waiting, waitingNo);
+        return result;
     }
 
-    @Transactional(readOnly = true)
     public void checkTokenIsActive(String token) {
-        WaitingEntity waiting = waitingRepository.findOneByToken(token).orElseThrow(() -> new WaitingException(WaitingError.TOKEN_NOT_FOUND));
-        if (!waiting.isActive()) {
+        WaitingInfo.TokenInfo activeToken = waitingRepository.findActiveToken(new WaitingParam.Search(token));
+        if (activeToken == null) {
             throw new WaitingException(WaitingError.NOT_ACTIVE_TOKEN);
         }
     }
 
-    @Transactional
     public void expireToken(String token) {
-        WaitingEntity waiting = waitingRepository.findOneByToken(token).orElseThrow(() -> new WaitingException(WaitingError.TOKEN_NOT_FOUND));
-        waiting.expire();
+        waitingRepository.expire(new WaitingParam.Search(token));
     }
 
-    @Scheduled(fixedDelay = 1500, initialDelay = 2000)
-    @Transactional
+    @Scheduled(fixedDelay = 3000, initialDelay = 2000)
     public void activate() {
-        List<WaitingEntity> targets = waitingRepository.findActivateTargets(WaitingStatus.WAIT, WaitingEntity.ACTIVATE_PERSONNEL);
+        List<WaitingInfo.ActivateTarget> targets = waitingRepository.findActivateTargets(new WaitingParam.ActivateTarget(WaitingToken.ACTIVATE_PERSONNEL));
         if (targets.isEmpty()) {
             throw new WaitingException(WaitingError.ACTIVATE_TARGET_NOT_FOUND);
         }
-        targets.forEach(WaitingEntity::activate);
+        waitingRepository.activate(WaitingParam.Activate.of(targets, WaitingToken.ACTIVE_MINUTE, WaitingToken.ACTIVE_TIMEUNIT));
     }
 
 }
