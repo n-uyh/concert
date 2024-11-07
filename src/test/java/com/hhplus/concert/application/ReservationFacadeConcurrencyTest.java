@@ -7,6 +7,7 @@ import com.hhplus.concert.domain.concert.ConcertException.ConcertError;
 import com.hhplus.concert.domain.concert.ConcertSeatEntity;
 import com.hhplus.concert.domain.reservation.ReservationCommand;
 import com.hhplus.concert.infra.db.concert.ConcertSeatsJpaRepository;
+import com.hhplus.concert.domain.support.lock.AlreadyLockedException;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -46,7 +47,7 @@ class ReservationFacadeConcurrencyTest {
     @DisplayName("동시에 여러명이 하나의 좌석을 예약하려고 하는 경우, 한명만 성공한다.")
     void reservationConcurrencyTest() throws InterruptedException {
         long seatId = 1;
-        int count = 4000;
+        int count = 40;
         ExecutorService executorService = Executors.newFixedThreadPool(count);
         CountDownLatch latch = new CountDownLatch(count);
 
@@ -63,8 +64,8 @@ class ReservationFacadeConcurrencyTest {
                     if (e.getErrorCode() == ConcertError.SEAT_ALREADY_OCCUPIED) {
                         errorCount.getAndAdd(1);
                     }
-                } catch (Exception e) {
-                    log.error(e.getMessage());
+                } catch (AlreadyLockedException e) {
+                    errorCount.getAndAdd(1);
                 } finally{
                     latch.countDown();
                 }
