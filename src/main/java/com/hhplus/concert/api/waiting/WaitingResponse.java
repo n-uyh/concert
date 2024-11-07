@@ -18,12 +18,11 @@ public class WaitingResponse {
     public record TokenResult(
         String token,
         String status,
-        long waitingNo,
-        LocalDateTime updatedAt
+        long waitingNo
     ) {
 
         public static TokenResult of(TokenInfo info) {
-            return new TokenResult(info.token(), info.status(), info.waitingNo(), info.updatedAt());
+            return new TokenResult(info.token(), info.status(), info.waitingNo());
         }
     }
 

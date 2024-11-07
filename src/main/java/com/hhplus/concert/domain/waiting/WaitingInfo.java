@@ -1,6 +1,7 @@
 package com.hhplus.concert.domain.waiting;
 
 import java.time.LocalDateTime;
+import org.springframework.util.StringUtils;
 
 public class WaitingInfo {
     public record Created(
@@ -8,21 +9,35 @@ public class WaitingInfo {
         String status,
         LocalDateTime createdAt
     ) {
-
-        public Created(WaitingEntity entity) {
-            this(entity.getToken(), entity.status(), entity.getCreatedAt());
+        public static Created of(WaitingToken token) {
+            return new Created(token.token(), token.status().name(), token.createdAt());
         }
     }
 
     public record TokenInfo(
         String token,
         String status,
-        long waitingNo,
-        LocalDateTime updatedAt
+        long waitingNo
     ) {
 
-        public TokenInfo(WaitingEntity entity, long waitingNo) {
-            this(entity.getToken(), entity.status(), waitingNo, entity.getUpdatedAt());
+        public static TokenInfo waiting(String token, Long waitingNo) {
+            if (waitingNo == null) {
+                return null;
+            }
+            return new TokenInfo(token, WaitingStatus.WAIT.name(), waitingNo);
         }
+
+        public static TokenInfo acitve(String token) {
+            if (StringUtils.hasText(token)) {
+                return new TokenInfo(token, WaitingStatus.ACTIVE.name(), 0);
+            }
+            return null;
+        }
+    }
+
+    public record ActivateTarget(
+        String token
+    ) {
+
     }
 }

@@ -1,15 +1,19 @@
 package com.hhplus.concert.domain.waiting;
 
+import com.hhplus.concert.infra.redis.waiting.WaitingParam;
 import java.util.List;
-import java.util.Optional;
 
 public interface WaitingRepository {
 
-    void save(WaitingEntity entity);
+    void issue(WaitingParam.Issue token);
 
-    Optional<WaitingEntity> findOneByToken(String token);
+    void activate(List<WaitingParam.Activate> param);
 
-    List<WaitingEntity> findAllStatusWaiting();
+    List<WaitingInfo.ActivateTarget> findActivateTargets(WaitingParam.ActivateTarget search);
 
-    List<WaitingEntity> findActivateTargets(WaitingStatus status, int activatePersonnel);
+    WaitingInfo.TokenInfo findWaitToken(WaitingParam.Search search);
+
+    WaitingInfo.TokenInfo findActiveToken(WaitingParam.Search search);
+
+    void expire(WaitingParam.Search search);
 }
