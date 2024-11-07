@@ -2,6 +2,7 @@ package com.hhplus.concert.domain.concert;
 
 import com.hhplus.concert.domain.concert.ConcertException.ConcertError;
 import java.util.List;
+import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
@@ -16,7 +17,7 @@ public class ConcertService {
     @Cacheable(key = "#command", value = "availableConcerts")
     public List<ConcertInfo.Common> findAvailable(ConcertCommand.Available command) {
         List<ConcertEntity> concerts = concertRepository.findAvailable(command.from(), command.end());
-        return concerts.stream().map(ConcertInfo.Common::of).toList();
+        return concerts.stream().map(ConcertInfo.Common::of).collect(Collectors.toList());
     }
 
     public List<ConcertInfo.SeatInfo> findAvailableConcertSeats(ConcertCommand.Seat command) {
