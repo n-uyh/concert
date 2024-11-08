@@ -1,6 +1,8 @@
 package com.hhplus.concert.domain.support.lock;
 
+import com.hhplus.concert.infra.redis.lock.LockParam;
 import com.hhplus.concert.support.AopForTransaction;
+import com.hhplus.concert.support.BaseSpringELParser;
 import java.lang.reflect.Method;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -25,7 +27,8 @@ public class DistributedLockAop {
         Method method = signature.getMethod();
         DistributedLock distributedLock = method.getAnnotation(DistributedLock.class);
 
-        try (AutoCloseableRLock lock = lockRepository.lock(distributedLock)) {
+        String key = LockPolicy.LOCK_PREFIX + BaseSpringELParser.getDynamicValue(signature.getParameterNames(), joinPoint.getArgs(), distributedLock.key());
+        try (AutoCloseableRLock lock = lockRepository.lock(LockParam.of(distributedLock, key))) {
             if (!lock.isLocked()) throw new AlreadyLockedException("key already locked");
             return aopForTransaction.proceed(joinPoint);
         } catch (InterruptedException e) {
