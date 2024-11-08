@@ -20,7 +20,7 @@ public class ReservationFacade {
     private final ConcertService concertService;
     private final ReservationService reservationService;
 
-    @DistributedLock(key = "lock:#command.seatId()", waitTime = 0)
+    @DistributedLock(key = "'seatId:'+#command.seatId()", waitTime = 0)
     @Transactional
     public ReservationInfo.ReservedInfo reserveSeat(ReservationCommand.ReserveSeat command) {
         long seatId = command.seatId();
