@@ -1,5 +1,6 @@
 package com.hhplus.concert.domain.waiting;
 
+import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.times;
@@ -9,9 +10,10 @@ import static org.mockito.Mockito.when;
 import com.hhplus.concert.domain.waiting.WaitingException.WaitingError;
 import com.hhplus.concert.domain.waiting.WaitingInfo.Created;
 import com.hhplus.concert.domain.waiting.WaitingInfo.TokenInfo;
+import com.hhplus.concert.infra.redis.waiting.WaitingParam;
+import com.hhplus.concert.infra.redis.waiting.WaitingParam.ActivateTarget;
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Optional;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -37,10 +39,13 @@ class WaitingServiceTest {
     }
 
     @Test
-    @DisplayName("대기열 토큰의 상태를 체크할 때, 토큰을 찾을 수 없는 경우 TOKEN_NOT_FOUND 에러가 발생한다.")
-    void getTokenWithWaitingNoAndTokenNotFound() {
+    @DisplayName("대기열 토큰을 조회할 때, WAIT/ACTIVE 대기열 두곳에서 모두 찾을 수 없으면 TOKEN_NOT_FOUND 에러가 발생한다.")
+    void getTokenButTokenNotFound() {
         String token = "someToken";
-        when(waitingRepository.findOneByToken(token)).thenReturn(Optional.empty());
+        WaitingParam.Search param = new WaitingParam.Search(token);
+
+        when(waitingRepository.findWaitToken(param)).thenReturn(null);
+        when(waitingRepository.findActiveToken(param)).thenReturn(null);
 
         WaitingException exception = assertThrows(WaitingException.class,
             () -> waitingService.getToken(token));
@@ -49,127 +54,75 @@ class WaitingServiceTest {
     }
 
     @Test
-    @DisplayName("대기열 토큰의 상태를 체크할 때, 토큰이 만료된 경우 EXPIRED_TOKEN 에러가 발생한다.")
-    void getTokenWithWaitingNoAndTokenNotFoundExpiredToken() {
+    @DisplayName("대기열 토큰을 조회할 때, WAIT 대기열에서 토큰을 발견하면 WAIT상태와 대기순번을 알 수 있다.")
+    void getTokenAndStatusWait() {
         String token = "someToken";
-        WaitingStatus expired = WaitingStatus.EXPIRED;
-        LocalDateTime someDateTime = LocalDateTime.of(2024,10,10,20,0,0);
-        when(waitingRepository.findOneByToken(token)).thenReturn(
-            Optional.of(new WaitingEntity(1, token, expired, someDateTime, someDateTime))
-        );
+        WaitingParam.Search param = new WaitingParam.Search(token);
 
-        WaitingException exception = assertThrows(WaitingException.class,
-            () -> waitingService.getToken(token));
+        when(waitingRepository.findWaitToken(param)).thenReturn(WaitingInfo.TokenInfo.waiting(token,20L));
 
-        assertEquals(WaitingError.EXPIRED_TOKEN, exception.getErrorCode());
+        TokenInfo tokenInfo = waitingService.getToken(token);
+        assertEquals(WaitingStatus.WAIT.name(), tokenInfo.status());
+        assertEquals(20L, tokenInfo.waitingNo());
     }
 
     @Test
-    @DisplayName("대기열 토큰의 상태를 체크할 때, 토큰이 ACTIVE 상태이면 그대로 반환한다.")
-    void whenCheckTokenStatusAndReturnAlreadyActive() {
+    @DisplayName("대기열 토큰을 조회할 때, WAIT 대기열에서 토큰을 발견하지 못하였으나 ACTIVE 대기열에서 토큰을 발견하면 토큰은 ACTIVE 상태이고, 대기순번은 0이다.")
+    void getTokenAndStatusActive() {
         String token = "someToken";
-        WaitingStatus active = WaitingStatus.ACTIVE;
-        LocalDateTime someDateTime = LocalDateTime.of(2024,10,10,20,0,0);
+        WaitingParam.Search param = new WaitingParam.Search(token);
 
-        when(waitingRepository.findOneByToken(token)).thenReturn(
-            Optional.of(new WaitingEntity(1, token, active, someDateTime, someDateTime))
-        );
+        when(waitingRepository.findWaitToken(param)).thenReturn(null);
+        when(waitingRepository.findActiveToken(param)).thenReturn(WaitingInfo.TokenInfo.acitve(token));
 
-        TokenInfo result = waitingService.getToken(token);
-        assertEquals(token, result.token());
-        assertEquals(active.name(), result.status());
-        assertEquals(0, result.waitingNo());
+        TokenInfo tokenInfo = waitingService.getToken(token);
+        assertEquals(WaitingStatus.ACTIVE.name(), tokenInfo.status());
+        assertEquals(0, tokenInfo.waitingNo());
     }
 
     @Test
-    @DisplayName("대기열 토큰의 상태를 체크할 때, 토큰상태가 WAIT이면 대기순번을 반환한다.")
-    void whenCheckTokenStatusAndActiveFullThenStillWaiting() {
-        String token = "someToken";
-        WaitingStatus status = WaitingStatus.WAIT;
-        LocalDateTime someDateTime = LocalDateTime.of(2024,10,10,20,0,0);
-        WaitingEntity waiting = new WaitingEntity(1,  token, status, someDateTime,
-            someDateTime);
-
-        when(waitingRepository.findOneByToken(token)).thenReturn(Optional.of(waiting));
-        when(waitingRepository.findAllStatusWaiting()).thenReturn(
-            List.of(
-                waiting,
-                new WaitingEntity(2, "otherToken", status, someDateTime,
-                    someDateTime),
-                new WaitingEntity(3, "otherToken2", status, someDateTime,
-                    someDateTime)
-            )
-        );
-
-        TokenInfo result = waitingService.getToken(token);
-        assertEquals(token, result.token());
-        assertEquals(status.name(), result.status());
-        assertEquals(1, result.waitingNo());
-    }
-
-    @Test
-    @DisplayName("토큰이 ACTIVE 상태인지 확인할때 발급된 토큰이 없는 경우 TOKEN_NOT_FOUND 에러가 발생한다")
-    void checkTokenIsActiveButNotFound() {
-        String token = "someToken";
-        when(waitingRepository.findOneByToken(token)).thenReturn(Optional.empty());
-        WaitingException exception = assertThrows(WaitingException.class,
-            () -> waitingService.checkTokenIsActive(token));
-
-        assertEquals(WaitingError.TOKEN_NOT_FOUND, exception.getErrorCode());
-    }
-
-    @Test
-    @DisplayName("토큰이 ACTIVE 상태인지 확인할때 발급된 토큰이 ACTIVE상태가 아닌경우 NOT_ACTIVE_TOKEN 에러가 발생한다")
+    @DisplayName("토큰이 ACTIVE 상태인지 확인할때 ACTIVE 대기열에서 토큰을 찾지 못할 경우 NOT_ACTIVE_TOKEN 에러가 발생한다")
     void checkTokenIsActiveButNotActive() {
         String token = "someToken";
-        WaitingStatus status = WaitingStatus.WAIT;
-        LocalDateTime someDateTime = LocalDateTime.of(2024,10,10,20,0,0);
-        WaitingEntity waiting = new WaitingEntity(1,  token, status, someDateTime,
-            someDateTime);
-
-        when(waitingRepository.findOneByToken(token)).thenReturn(Optional.of(waiting));
+        WaitingParam.Search param = new WaitingParam.Search(token);
+        when(waitingRepository.findActiveToken(param)).thenReturn(null);
         WaitingException exception = assertThrows(WaitingException.class,
             () -> waitingService.checkTokenIsActive(token));
 
         assertEquals(WaitingError.NOT_ACTIVE_TOKEN, exception.getErrorCode());
     }
 
+
     @Test
     @DisplayName("토큰이 ACTIVE 상태인지 확인할때 발급된 토큰이 ACTIVE상태이면 아무 에러도 발생하지 않는다")
     void checkTokenIsActiveAndActive() {
         String token = "someToken";
-        WaitingStatus status = WaitingStatus.ACTIVE;
-        LocalDateTime someDateTime = LocalDateTime.of(2024,10,10,20,0,0);
-        WaitingEntity waiting = new WaitingEntity(1,  token, status, someDateTime,
-            someDateTime);
+        WaitingParam.Search param = new WaitingParam.Search(token);
 
-        when(waitingRepository.findOneByToken(token)).thenReturn(Optional.of(waiting));
+        when(waitingRepository.findActiveToken(param)).thenReturn(WaitingInfo.TokenInfo.acitve(token));
 
-        waitingService.checkTokenIsActive(token);
+        assertDoesNotThrow(()->waitingService.checkTokenIsActive(token));
 
-        verify(waitingRepository, times(1)).findOneByToken(token);
+        verify(waitingRepository, times(1)).findActiveToken(param);
     }
 
     @Test
-    @DisplayName("토큰 만료 성공테스트")
+    @DisplayName("토큰 만료 내부로직 호출 테스트")
     void expireTokenSuccess() {
         String token = "someToken";
-        LocalDateTime createdAt = LocalDateTime.of(2024, 10, 10, 12, 0, 0);
-        WaitingEntity entity = new WaitingEntity(0, token, WaitingStatus.ACTIVE, createdAt,
-            createdAt);
-        when(waitingRepository.findOneByToken(token)).thenReturn(Optional.of(entity));
+        WaitingParam.Search param = new WaitingParam.Search(token);
 
         waitingService.expireToken(token);
 
-        assertEquals(WaitingStatus.EXPIRED, entity.getStatus());
+        verify(waitingRepository, times(1)).expire(param);
     }
 
     @Test
     @DisplayName("대기열 토큰 스케줄러 실행 중 활성화 대상 토큰이 없는 경우 ACTIVATE_TARGET_NOT_FOUND 에러가 발생한다.")
     void tokenActivateSchedulerAndActivateTargetNotFound() {
-        WaitingStatus status = WaitingStatus.WAIT;
-        int personnel = WaitingEntity.ACTIVATE_PERSONNEL;
-        when(waitingRepository.findActivateTargets(status, personnel)).thenReturn(
+        long personnel = WaitingToken.ACTIVATE_PERSONNEL;
+        WaitingParam.ActivateTarget param = new WaitingParam.ActivateTarget(personnel);
+        when(waitingRepository.findActivateTargets(param)).thenReturn(
             List.of()
         );
 
@@ -180,22 +133,22 @@ class WaitingServiceTest {
     }
 
     @Test
-    @DisplayName("대기열 토큰 스케줄러 실행 중 활성화 대상 토큰을 잘 조회해온다면 대상 토큰의 상태가 WAIT 에서 ACTIVE로 업데이트 된다.")
+    @DisplayName("대기열 토큰 스케줄러 실행 중 활성화 대상 토큰을 잘 조회해온다면 업데이트 로직이 실행된다.")
     void tokenActivateSchedulerThenTargetsStatusChangedToActive() {
-        WaitingStatus status = WaitingStatus.WAIT;
-        int personnel = WaitingEntity.ACTIVATE_PERSONNEL;
-        LocalDateTime createdAt = LocalDateTime.of(2024, 10, 10, 12, 0, 0);
+        long personnel = WaitingToken.ACTIVATE_PERSONNEL;
 
-        List<WaitingEntity> targets = List.of(
-            new WaitingEntity(1, "token1", status, createdAt, createdAt),
-            new WaitingEntity(2, "token2", status, createdAt, createdAt),
-            new WaitingEntity(3, "token3", status, createdAt, createdAt)
+        List<WaitingInfo.ActivateTarget> targets = List.of(
+            new WaitingInfo.ActivateTarget("token1"),
+            new WaitingInfo.ActivateTarget("token2"),
+            new WaitingInfo.ActivateTarget("token3")
         );
 
-        when(waitingRepository.findActivateTargets(status, personnel)).thenReturn(targets);
+        WaitingParam.ActivateTarget param = new WaitingParam.ActivateTarget(personnel);
+        when(waitingRepository.findActivateTargets(param)).thenReturn(targets);
 
         waitingService.activate();
 
-        assertEquals(WaitingStatus.ACTIVE, targets.get(0).getStatus());
+        List<WaitingParam.Activate> activeParams = WaitingParam.Activate.of(targets, WaitingToken.ACTIVE_MINUTE, WaitingToken.ACTIVE_TIMEUNIT);
+        verify(waitingRepository, times(1)).activate(activeParams);
     }
 }
