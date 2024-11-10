@@ -12,7 +12,4 @@ public interface ConcertSeatsJpaRepository extends JpaRepository<ConcertSeatEnti
 
     List<ConcertSeatEntity> findAllByConcertId(long concertId);
 
-    @Lock(LockModeType.PESSIMISTIC_WRITE)
-    @Query("select s from ConcertSeatEntity s where s.id = :seatId")
-    ConcertSeatEntity findOneByIdWithLock(@Param("seatId") long seatId);
 }
