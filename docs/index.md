@@ -75,7 +75,7 @@
 
 #### 3. 복합 인덱스 
 - 좌석에 등급(VIP, S, R, A)이 있는 경우를 가정. 이 때 콘서트별 특정 좌석등급인 좌석들을 조회해오는 시나리오를 생각해 보겠다.
-- 등급 컬럼 추가 및 좌석등급 데이터 랜덤으로 삽입
+- 등급 컬럼 추가 및 좌석등급 데이터 랜덤으로 삽입  
     ![add__grade.png](image/add__grade.png)
 - 인덱스가 없는 경우 실행계획 : actual time 약 2.8s
     ![grade_fullscan.png](image/grade_fullscan.png)
