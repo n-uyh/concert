@@ -70,7 +70,7 @@
 Microservice 기반 분산된 아키텍처에서는 각 서비스가 서로 다른 데이터베이스를 가지고 있어 단순하게 ACID(Atomic, Consistent, Isolated, Durable) 트랜잭션을 유지하기 어렵다.
 
 > **[ ACID ]**  
-> 트랜잭션은 Atomic, Consistent, Isolated, Durable 해야한다. 단일 서비스에서 트랜잭션은 ACID하지만, 다중 서비스 아키텍처에서는 트랜잭션 관리 전략이 필요하다.
+> 트랜잭션은 Atomic, Consistent, Isolated, Durable 해야한다. 단일 서비스에서 트랜잭션은 ACID하지만, 다중 서비스 아키텍처에서는 트랜잭션 관리 전략이 필요하다.  
 > **Atomicity**: 원자성. 모든 작업이 성공하거나 모두 실패한다.   
 > **Consistency**: 일관성. 트랜잭션 실행 후 성공적으로 완료하면 일관성있는 데이터베이스 상태를 유지한다.   
 > **Isolation**: 고립성. 동시 트랜잭션이 발생해도 서로 방해하거나 영향을 미치지 않는다.  
