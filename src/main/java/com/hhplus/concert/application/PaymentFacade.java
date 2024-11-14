@@ -1,25 +1,28 @@
 package com.hhplus.concert.application;
 
 import com.hhplus.concert.domain.payment.PaymentCommand;
+import com.hhplus.concert.domain.payment.PaymentEvent;
+import com.hhplus.concert.domain.payment.PaymentEventPublisher;
 import com.hhplus.concert.domain.payment.PaymentInfo;
 import com.hhplus.concert.domain.payment.PaymentService;
 import com.hhplus.concert.domain.point.PointCommand;
 import com.hhplus.concert.domain.point.PointService;
 import com.hhplus.concert.domain.reservation.ReservationInfo;
 import com.hhplus.concert.domain.reservation.ReservationService;
-import com.hhplus.concert.domain.waiting.WaitingService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 
 @Component
 @RequiredArgsConstructor
 public class PaymentFacade {
 
-    private final WaitingService waitingService;
     private final ReservationService reservationService;
     private final PaymentService paymentService;
     private final PointService pointService;
+    private final PaymentEventPublisher paymentEventPublisher;
 
+    @Transactional
     public PaymentInfo.PayedInfo createPayment(PaymentCommand.CreatePayment command) {
         ReservationInfo.ReservedInfo reserved = reservationService.findReservationWithStatusUpdate(
             command.reservationId());
@@ -28,7 +31,7 @@ public class PaymentFacade {
 
         pointService.pay(new PointCommand.Pay(payment.userId(), payment.price()));
 
-        waitingService.expireToken(command.token());
+        paymentEventPublisher.publishPayCompletedEvent(PaymentEvent.PayCompleted.of(command.token()));
         return new PaymentInfo.PayedInfo(reserved, payment);
     }
 
