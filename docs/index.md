@@ -26,7 +26,7 @@
 ### [ 콘서트명 검색 ] 
 - api 구현은 없으나 사용자가 콘서트명을 검색하는 시나리오는 있을 수 있다. 
 #### 1. 콘서트 데이터 세팅
-- 콘서트 테이블 데이터 개수 (109,999,994개)
+- 콘서트 테이블 데이터 개수 (109,999,994개)  
 ![공연수.png](image/%EA%B3%B5%EC%97%B0%EC%88%98.png)
 
 #### 2. 일치검색 인덱스 비교 
@@ -75,23 +75,24 @@
 
 #### 3. 복합 인덱스 
 - 좌석에 등급(VIP, S, R, A)이 있는 경우를 가정. 이 때 콘서트별 특정 좌석등급인 좌석들을 조회해오는 시나리오를 생각해 보겠다.
-- 등급 컬럼 추가 및 좌석등급 데이터 랜덤으로 삽입  
-    ![add__grade.png](image/add__grade.png)
-- 인덱스가 없는 경우 실행계획 : actual time 약 2.8s
-    ![grade_fullscan.png](image/grade_fullscan.png)
-- concert_id, grade 각각 단일 인덱스 실행계획 : actual time 약 12ms 
-    ![grade_index1.png](image/grade_index1.png)
-- 복합인덱스 실행계획 (concert_id, grade 순서) : actual time 약 5.9ms
-    ![grade_multi.png](image/grade_multi.png)
-- 복합인덱스 실행계획 (grade, concert_id 순서) : actual time 약 8.6ms
-    ![grade_multi_reverse.png](image/grade_multi_reverse.png)
-- 복합(concert_id, grade) - 복합(grade, concert_id) - 단일 - 인덱스x 순으로 조회속도가 빠르다.
+- 등급 컬럼 추가 및 좌석등급 데이터 랜덤으로 삽입
+    ![count_grade_group.png](image/count_grade_group.png)
+- 인덱스가 없는 경우 실행계획 : actual time 약 4.7s
+    ![seat_grade_fullscan.png](image/seat_grade_fullscan.png)
+- concert_id, grade 각각 단일 인덱스 실행계획 : actual time 약 660ms 
+    ![seat_grade_mono_index.png](image/seat_grade_mono_index.png)
+- 복합인덱스 실행계획 (concert_id, grade 순서) : actual time 약 53ms
+    ![seat_grade_multi_index.png](image/seat_grade_multi_index.png)
+- 복합인덱스 실행계획 (grade, concert_id 순서) : actual time 약 38ms    
+  ![seat_multi_reverse_idx_analyze.png](image/seat_multi_reverse_idx_analyze.png)
+- 복합(grade, concert_id) - 복합(concert_id, grade) - 단일 - 인덱스x 순으로 조회속도가 빠르다.
+  - grade의 카디널리티가 더 낮으므로 복합인덱스 중 앞 순서에 올 때 조회 성능이 더 향상된다. 
 <br/>
 
 ### 정리
-| 적용지점  |적용컬럼| 성능향상                                                                                                             |
-|-------|----|------------------------------------------------------------------------------------------------------------------|
-| 콘서트조회 | title | 완전일치검색 : 향상(34s -> 0.3ms, 약 99.99% 향상) <br> like검색 : 의문(fulltext index적용시 41s -> 2.7ms, 약 99.93% 향상, but 불완전한검색) |
-| 좌석조회(단일)| concert_id | 2.4s -> 8.9ms (약 99.63% 향상)                                                                                      |
-| 좌석조회(복합)| concert_id, grade | 2.8s -> 5.9ms (약 99.82% 향상)                                                                                      |
+| 적용지점  | 적용컬럼              | 성능향상                                                                                                             |
+|-------|-------------------|------------------------------------------------------------------------------------------------------------------|
+| 콘서트조회 | title             | 완전일치검색 : 향상(34s -> 0.3ms, 약 99.99% 향상) <br> like검색 : 의문(fulltext index적용시 41s -> 2.7ms, 약 99.93% 향상, but 불완전한검색) |
+| 좌석조회(단일)| concert_id        | 2.4s -> 8.9ms (약 99.63% 향상)                                                                                      |
+| 좌석조회(복합)| grade, concert_id | 4.7s -> 38ms (약 99.2% 향상)                                                                                        |
 
