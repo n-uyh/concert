@@ -66,8 +66,12 @@
     ```
 - concert / payment / point / reservation / user / waiting 으로 각각 서비스 분리
 
+<br> 
+
 ### 트랜잭션 처리의 한계
 Microservice 기반 분산된 아키텍처에서는 각 서비스가 서로 다른 데이터베이스를 가지고 있어 단순하게 ACID(Atomic, Consistent, Isolated, Durable) 트랜잭션을 유지하기 어렵다.
+
+<br>
 
 > **[ ACID ]**  
 > 트랜잭션은 Atomic, Consistent, Isolated, Durable 해야한다. 단일 서비스에서 트랜잭션은 ACID하지만, 다중 서비스 아키텍처에서는 트랜잭션 관리 전략이 필요하다.  
@@ -76,6 +80,7 @@ Microservice 기반 분산된 아키텍처에서는 각 서비스가 서로 다�
 > **Isolation**: 고립성. 동시 트랜잭션이 발생해도 서로 방해하거나 영향을 미치지 않는다.  
 > **Durability**: 영속성(내구성?). 시스템 장애나 정전이 발생하더라도 커밋된 트랜잭션이 커밋된 상태로 유지되도록 보장한다.
 
+<br>
   
 아래의 기존코드를 살펴보자.
 ```java
@@ -103,9 +108,13 @@ public class ReservationFacade {
 
 ## 해결방안: Saga 패턴 이해하기
 위와 같은 트랜잭션 처리의 한계를 해결하기 위해 Saga 패턴에서는 `보상 트랜잭션`이라는 개념을 제시한다. Saga 패턴에 대해 이해해보자.
+
+<br>
+
 ### Saga? 
-우선 Saga라는 단어의 뜻은 무엇일까? 한 [블로그 글](https://krksap.tistory.com/2113)에서 힌트를 얻었다.
-![saga_meanig_guess.png](saga_meanig_guess.png)
+우선 Saga라는 단어의 뜻은 무엇일까? 한 [블로그 글](https://krksap.tistory.com/2113)에서 힌트를 얻었다.  
+<p align="center"><kbd><img src="saga_meanig_guess.png"  width="600" height="442" /></kbd></p>
+
 이 글을 보고 나는 Saga 패턴은 `"구전설화 패턴"`이라고 이해했다(내마음대로). 이야기(Message)를 서비스간에 전달 전달 전달하는 패턴이니까.
 
 Saga 패턴은 로컬 트랜잭션을 순서를 이용한다. 각 로컬 트랜잭션이 데이터베이스를 업데이트하고, **메세지나 이벤트**를 발행해 다음 로컬 트랜잭션을 야기한다. 이 때 한 로컬 트랜잭션이 실패하는 경우, 앞서 진행된 트랜잭션들을 되돌리는(undo상태로) 일련의 **보상트랜잭션**(compensating transactions)을 발생시킨다.
