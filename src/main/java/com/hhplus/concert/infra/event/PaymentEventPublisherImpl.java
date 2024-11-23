@@ -1,7 +1,7 @@
 package com.hhplus.concert.infra.event;
 
-import com.hhplus.concert.domain.payment.PaymentEvent;
-import com.hhplus.concert.domain.payment.PaymentEventPublisher;
+import com.hhplus.concert.domain.payment.event.PaymentEvent;
+import com.hhplus.concert.domain.payment.event.PaymentEventPublisher;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Component;

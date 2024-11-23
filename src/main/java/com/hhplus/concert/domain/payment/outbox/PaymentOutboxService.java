@@ -1,7 +1,10 @@
-package com.hhplus.concert.domain.payment;
+package com.hhplus.concert.domain.payment.outbox;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.hhplus.concert.domain.payment.event.EventType;
+import com.hhplus.concert.domain.payment.event.PaymentEvent;
+import com.hhplus.concert.domain.payment.event.PaymentProducer;
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;

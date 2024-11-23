@@ -1,4 +1,4 @@
-package com.hhplus.concert.domain.payment;
+package com.hhplus.concert.domain.payment.event;
 
 import java.util.List;
 

@@ -1,7 +1,7 @@
 package com.hhplus.concert.infra.kafka.payment;
 
-import com.hhplus.concert.domain.payment.PaymentEvent;
-import com.hhplus.concert.domain.payment.PaymentProducer;
+import com.hhplus.concert.domain.payment.event.PaymentEvent;
+import com.hhplus.concert.domain.payment.event.PaymentProducer;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

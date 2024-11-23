@@ -1,8 +1,8 @@
 package com.hhplus.concert.infra.db.payment;
 
-import com.hhplus.concert.domain.payment.EventType;
-import com.hhplus.concert.domain.payment.PaymentOutboxEntity;
-import com.hhplus.concert.domain.payment.PaymentOutboxRepository;
+import com.hhplus.concert.domain.payment.event.EventType;
+import com.hhplus.concert.domain.payment.outbox.PaymentOutboxEntity;
+import com.hhplus.concert.domain.payment.outbox.PaymentOutboxRepository;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
