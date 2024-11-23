@@ -1,7 +1,7 @@
 package com.hhplus.concert.interfaces.api.waiting;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.hhplus.concert.domain.payment.PaymentEvent;
+import com.hhplus.concert.domain.payment.event.PaymentEvent;
 import com.hhplus.concert.domain.waiting.WaitingService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

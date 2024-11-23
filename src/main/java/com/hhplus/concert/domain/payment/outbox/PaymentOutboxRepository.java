@@ -1,5 +1,6 @@
-package com.hhplus.concert.domain.payment;
+package com.hhplus.concert.domain.payment.outbox;
 
+import com.hhplus.concert.domain.payment.event.EventType;
 import java.util.List;
 
 public interface PaymentOutboxRepository {

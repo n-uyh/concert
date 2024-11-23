@@ -1,9 +1,9 @@
 package com.hhplus.concert.interfaces.eventListener;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.hhplus.concert.domain.payment.PaymentEvent;
-import com.hhplus.concert.domain.payment.PaymentOutboxService;
-import com.hhplus.concert.domain.payment.PaymentProducer;
+import com.hhplus.concert.domain.payment.event.PaymentEvent;
+import com.hhplus.concert.domain.payment.outbox.PaymentOutboxService;
+import com.hhplus.concert.domain.payment.event.PaymentProducer;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.kafka.clients.consumer.ConsumerRecord;

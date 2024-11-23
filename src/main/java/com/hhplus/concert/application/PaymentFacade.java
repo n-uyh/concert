@@ -1,8 +1,8 @@
 package com.hhplus.concert.application;
 
 import com.hhplus.concert.domain.payment.PaymentCommand;
-import com.hhplus.concert.domain.payment.PaymentEvent;
-import com.hhplus.concert.domain.payment.PaymentEventPublisher;
+import com.hhplus.concert.domain.payment.event.PaymentEvent;
+import com.hhplus.concert.domain.payment.event.PaymentEventPublisher;
 import com.hhplus.concert.domain.payment.PaymentInfo;
 import com.hhplus.concert.domain.payment.PaymentService;
 import com.hhplus.concert.domain.point.PointCommand;

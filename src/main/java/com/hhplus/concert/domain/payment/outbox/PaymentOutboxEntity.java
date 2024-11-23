@@ -1,6 +1,6 @@
-package com.hhplus.concert.domain.payment;
+package com.hhplus.concert.domain.payment.outbox;
 
-import com.hhplus.concert.domain.point.PointCommand;
+import com.hhplus.concert.domain.payment.event.EventType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
