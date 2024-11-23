@@ -23,9 +23,9 @@ public class PaymentEventListener {
     private final ObjectMapper objectMapper;
 
     @TransactionalEventListener(phase = TransactionPhase.BEFORE_COMMIT)
-    public void payCompletedEventOccured(PaymentEvent.PayCompleted event) {
+    public void payCompletedEventOccurred(PaymentEvent.PayCompleted event) {
         log.info("handle payCompletedEvent - outbox : {}", event.eventId());
-        outboxService.occured(event);
+        outboxService.occurred(event);
     }
 
     @Async
@@ -38,10 +38,9 @@ public class PaymentEventListener {
     @KafkaListener(topics = "pay-completed", groupId = "pay-completed-outbox")
     public void consumePayCompletedEvent(ConsumerRecord<String,byte[]> message) {
         try {
-            PaymentEvent.PayCompleted event = objectMapper.readValue(message.value(),
-                PaymentEvent.PayCompleted.class);
+            PaymentEvent.PayCompleted event = objectMapper.readValue(message.value(), PaymentEvent.PayCompleted.class);
 
-            log.info("handle payCompletedEven - consume outbox :  {}", event.eventId());
+            log.info("handle payCompletedEvent - consume outbox :  {}", event.eventId());
             outboxService.proceeded(event);
         } catch (Exception e) {
             log.warn("outbox procceed fail");

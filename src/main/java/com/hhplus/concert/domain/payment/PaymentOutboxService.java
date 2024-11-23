@@ -19,12 +19,11 @@ public class PaymentOutboxService {
     private final PaymentProducer paymentProducer;
 
     @Transactional
-    public void occured(PaymentEvent.PayCompleted event) {
+    public void occurred(PaymentEvent.PayCompleted event) {
         ObjectMapper objectMapper = new ObjectMapper();
         try {
             String eventJson = objectMapper.writeValueAsString(event);
-            PaymentOutboxEntity entity = PaymentOutboxEntity.initialize(event.eventId(), EventType.PAY_COMPLETED,
-                eventJson);
+            PaymentOutboxEntity entity = PaymentOutboxEntity.initialize(event.eventId(), EventType.PAY_COMPLETED, eventJson);
             outboxRepository.save(entity);
         } catch (JsonProcessingException e) {
             log.info("outboxService json parse error", e);
@@ -55,7 +54,7 @@ public class PaymentOutboxService {
                     return objectMapper.readValue(t.getPayload(),
                         PaymentEvent.PayCompleted.class);
                 } catch (JsonProcessingException e) {
-                    log.error("pay-completed-event republish jsonprocessing error");
+                    log.error("pay-completed-event republish json processing error");
                     return null;
                 }
             }).filter(Objects::nonNull).collect(Collectors.toList());
