@@ -1,4 +1,4 @@
-package com.hhplus.concert.infra.event;
+package com.hhplus.concert.infra.spring.event.payment;
 
 import com.hhplus.concert.DynamicTestContainer;
 import java.time.Duration;

@@ -1,4 +1,4 @@
-package com.hhplus.concert.infra.event;
+package com.hhplus.concert.infra.spring.event.payment;
 
 import java.util.ArrayList;
 import java.util.List;
