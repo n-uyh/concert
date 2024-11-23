@@ -6,9 +6,11 @@ import com.hhplus.concert.domain.reservation.ReservationInfo.ReservedInfo;
 import java.time.LocalDateTime;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class ReservationService {
@@ -33,8 +35,8 @@ public class ReservationService {
 
     @Transactional
     public List<Long> expire(LocalDateTime baseTime) {
-        List<ReservationEntity> targets = reservationRepository.findExpireTargets(
-            ReservationStatus.RESERVED, baseTime);
+        List<ReservationEntity> targets = reservationRepository.findExpireTargets(ReservationStatus.RESERVED, baseTime);
+        log.info("reservation expire targets size: {}", targets.size());
 
         if (targets.isEmpty()) {
             throw new ReservationException(ReserveError.EXPIRE_TARGETS_NOT_FOUND);

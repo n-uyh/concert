@@ -5,10 +5,10 @@ import com.hhplus.concert.infra.redis.waiting.WaitingParam;
 import java.time.LocalDateTime;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
-import org.springframework.scheduling.annotation.Scheduled;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class WaitingService {
@@ -47,11 +47,13 @@ public class WaitingService {
         waitingRepository.expire(new WaitingParam.Search(token));
     }
 
-    @Scheduled(fixedDelay = 3000, initialDelay = 2000)
     public void activate() {
         List<WaitingInfo.ActivateTarget> targets = waitingRepository.findActivateTargets(new WaitingParam.ActivateTarget(WaitingToken.ACTIVATE_PERSONNEL));
+        log.info("token activating targets size: {}", targets.size());
+
         if (targets.isEmpty()) {
-            throw new WaitingException(WaitingError.ACTIVATE_TARGET_NOT_FOUND);
+            log.info("not found waiting token for activating");
+            return ;
         }
         waitingRepository.activate(WaitingParam.Activate.of(targets, WaitingToken.ACTIVE_MINUTE, WaitingToken.ACTIVE_TIMEUNIT));
     }

@@ -9,7 +9,6 @@ import com.hhplus.concert.domain.support.lock.DistributedLock;
 import java.time.LocalDateTime;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
-import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -28,7 +27,6 @@ public class ReservationFacade {
         return reservationService.reserveSeat(seatInfo, command.userId());
     }
 
-    @Scheduled(fixedDelay = 1000 * 60 * 3, initialDelay = 3000)
     @Transactional
     public void expire() {
         LocalDateTime now = LocalDateTime.now();
