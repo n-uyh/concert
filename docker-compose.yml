@@ -6,7 +6,7 @@ networks:
     external: true
 
 services:
-  app-hh-concert:
+  concert-app:
     container_name: concert-app
     build:
       context: .
@@ -51,19 +51,5 @@ services:
       KAFKA_ZOOKEEPER_CONNECT: zookeeper:32181
       KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://localhost:9092
       KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
-    networks:
-      - concert
-
-
-  kafka-ui:
-    container_name: hh-kafka-ui
-    image: provectuslabs/kafka-ui
-    ports:
-      - "8989:8080"
-    restart: always
-    environment:
-      - KAFKA_CLUSTERS_0_NAME = local
-      - KAFKA_CLUSTERS_0_BOOTSTRAPSERVERS=kafka:29092
-      - KAFKA_CLUSTERS_0_ZOOKEEPER=zookeeper:32181
     networks:
       - concert

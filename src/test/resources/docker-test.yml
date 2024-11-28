@@ -17,6 +17,12 @@ services:
       - "8086:8086"
     environment:
       - INFLUXDB_DB=k6
+      - INFLUXDB_HTTP_MAX_BODY_SIZE=20MB
+      - INFLUXDB_HTTP_WRITE_TIMEOUT=10s
+      - INFLUXDB_HTTP_READ_TIMEOUT=10s
+      - INFLUXDB_MAX_MEMORY_SIZE=500MB
+      - INFLUXDB_STORAGE_WAL_FLUSH_INTERVAL=10s
+      - INFLUXDB_STORAGE_WAL_FLUSH_SIZE=500MB
 
   grafana:
     container_name: hh-grafana

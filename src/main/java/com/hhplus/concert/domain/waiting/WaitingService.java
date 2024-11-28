@@ -16,8 +16,10 @@ public class WaitingService {
     private final WaitingRepository waitingRepository;
 
     public WaitingInfo.Created issue() {
+        log.info("waiting token issue start");
         WaitingToken token = WaitingToken.issue(LocalDateTime.now());
         waitingRepository.issue(WaitingParam.Issue.of(token));
+        log.info("waiting tokne issue end: {}", token);
         return WaitingInfo.Created.of(token);
     }
 
