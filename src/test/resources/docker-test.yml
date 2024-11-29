@@ -48,6 +48,7 @@ services:
       - "6565:6565"
     environment:
       - K6_OUT=influxdb=http://influxdb:8086/k6
-    command: run /test/test.js
+#    command: run /test/test.js
+    command: run /test/reservation.js
     volumes:
       - ./:/test

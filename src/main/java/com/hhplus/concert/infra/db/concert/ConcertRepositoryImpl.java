@@ -32,6 +32,6 @@ public class ConcertRepositoryImpl implements ConcertRepository {
 
     @Override
     public ConcertSeatEntity findSeat(long seatId) {
-        return concertSeatsJpaRepository.findById(seatId).get();
+        return concertSeatsJpaRepository.findById(seatId).orElse(null);
     }
 }
