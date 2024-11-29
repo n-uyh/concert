@@ -15,7 +15,7 @@ public record WaitingToken (
         return new WaitingToken(UUID.randomUUID().toString(),WaitingStatus.WAIT,createdAt,createdAt);
     }
 
-    public static final int ACTIVATE_PERSONNEL = 20;
+    public static final int ACTIVATE_PERSONNEL = 30;
     public static final long ACTIVE_MINUTE = 10;
     public static final TimeUnit ACTIVE_TIMEUNIT = TimeUnit.MINUTES;
 

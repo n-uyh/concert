@@ -19,7 +19,7 @@ public interface IConcertController {
     @Operation(summary = "예약가능 좌석 조회", description = "공연정보로 공연좌석 리스트를 조회합니다.")
     @ApiResponse(responseCode = "200", description = "조회성공")
     ResponseEntity<ConcertResponse.SeatList> availableSeats(
-        @ParameterObject ConcertRequest.Seat request
+        @ParameterObject long concertId
     );
 
 }

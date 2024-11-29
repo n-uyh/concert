@@ -10,6 +10,7 @@ import org.springframework.data.repository.query.Param;
 
 public interface ConcertSeatsJpaRepository extends JpaRepository<ConcertSeatEntity, Long> {
 
-    List<ConcertSeatEntity> findAllByConcertId(long concertId);
+    @Query("select s from ConcertSeatEntity s where s.concertId =:concertId order by s.id limit 2000")
+    List<ConcertSeatEntity> findAllByConcertId(@Param("concertId") long concertId);
 
 }

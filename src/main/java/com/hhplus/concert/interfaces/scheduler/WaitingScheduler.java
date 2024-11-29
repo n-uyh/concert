@@ -13,7 +13,7 @@ public class WaitingScheduler {
 
     private final WaitingService waitingService;
 
-    @Scheduled(fixedDelay = 3000, initialDelay = 2000)
+    @Scheduled(fixedDelay = 1000, initialDelay = 2000)
     public void activate() {
         log.info("start waiting scheduler - activate");
         waitingService.activate();

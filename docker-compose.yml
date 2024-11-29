@@ -1,12 +1,33 @@
 version: "2"
 
+networks:
+  concert:
+    driver: bridge
+    external: true
+
 services:
+  concert-app:
+    container_name: concert-app
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "8080:8080"
+    depends_on:
+      - redis
+      - kafka
+    networks:
+      - concert
+
   redis:
+    container_name: hh-redis
     image: redis:7.4.1-alpine
     ports:
-      - 6379:6379
+      - "6379:6379"
     environment:
       TZ: Asia/Seoul
+    networks:
+      - concert
 
   zookeeper:
     image: confluentinc/cp-zookeeper:7.5.0
@@ -15,29 +36,25 @@ services:
     environment:
       ZOOKEEPER_CLIENT_PORT: 32181
       ZOOKEEPER_TICK_TIME: 2000
-
+    networks:
+      - concert
 
   kafka:
-    container_name: concert_kafka
+    container_name: hh-kafka
     image: confluentinc/cp-kafka:7.5.0
+    restart: always
     ports:
+      - "29092:29092"
       - "9092:9092"
     depends_on:
       - zookeeper
     environment:
       KAFKA_BROKER_ID: 1
       KAFKA_ZOOKEEPER_CONNECT: zookeeper:32181
-      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://localhost:9092
+#      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://localhost:9092
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://hh-kafka:9092,PLAINTEXT_HOST://localhost:29092
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: PLAINTEXT:PLAINTEXT,PLAINTEXT_HOST:PLAINTEXT
+      KAFKA_INTER_BROKER_LISTENER_NAME: PLAINTEXT
       KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
-
-
-  kafka-ui:
-    image: provectuslabs/kafka-ui
-    container_name: kafka-ui
-    ports:
-      - "8989:8080"
-    restart: always
-    environment:
-      - KAFKA_CLUSTERS_0_NAME = local
-      - KAFKA_CLUSTERS_0_BOOTSTRAPSERVERS=kafka:29092
-      - KAFKA_CLUSTERS_0_ZOOKEEPER=zookeeper:32181
+    networks:
+      - concert
